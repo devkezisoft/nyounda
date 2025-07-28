@@ -8,6 +8,7 @@ import com.kezisoft.nyounda.domain.homeservice.HomeService;
 import com.kezisoft.nyounda.domain.homeservice.HomeServiceId;
 import com.kezisoft.nyounda.domain.homeservice.ProviderId;
 import com.kezisoft.nyounda.persistence.homeservice.entity.HomeServiceEntity;
+import com.kezisoft.nyounda.persistence.homeservice.jpa.JpaHomeServiceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -17,9 +18,9 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class JpaHomeServiceRepository implements HomeServiceRepository {
+public class HomeServiceRepositoryAdapter implements HomeServiceRepository {
 
-    private final SpringJpaHomeServiceRepository repository;
+    private final JpaHomeServiceRepository repository;
 
     private final TagRepository tagRepository;
     private final ReviewRepository reviewRepository;

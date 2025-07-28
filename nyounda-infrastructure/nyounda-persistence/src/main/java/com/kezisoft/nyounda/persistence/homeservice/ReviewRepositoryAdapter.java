@@ -3,6 +3,7 @@ package com.kezisoft.nyounda.persistence.homeservice;
 import com.kezisoft.nyounda.application.homeservice.port.out.ReviewRepository;
 import com.kezisoft.nyounda.domain.homeservice.Review;
 import com.kezisoft.nyounda.persistence.homeservice.entity.ReviewEntity;
+import com.kezisoft.nyounda.persistence.homeservice.jpa.JpaReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -11,9 +12,9 @@ import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
-public class JpaReviewRepository implements ReviewRepository {
+public class ReviewRepositoryAdapter implements ReviewRepository {
 
-    private final SpringJpaReviewRepository repository;
+    private final JpaReviewRepository repository;
 
     @Override
     public List<Review> findAllReviews(List<UUID> ids) {

@@ -4,6 +4,7 @@ import com.kezisoft.nyounda.application.homeservice.port.out.CategoryRepository;
 import com.kezisoft.nyounda.domain.homeservice.Category;
 import com.kezisoft.nyounda.domain.homeservice.CategoryId;
 import com.kezisoft.nyounda.persistence.homeservice.entity.CategoryEntity;
+import com.kezisoft.nyounda.persistence.homeservice.jpa.JpaCategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -11,9 +12,9 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class JpaCategoryRepository implements CategoryRepository {
+public class CategoryRepositoryAdapter implements CategoryRepository {
 
-    private final SpringJpaCategoryRepository repository;
+    private final JpaCategoryRepository repository;
 
     @Override
     public Optional<Category> findById(CategoryId id) {

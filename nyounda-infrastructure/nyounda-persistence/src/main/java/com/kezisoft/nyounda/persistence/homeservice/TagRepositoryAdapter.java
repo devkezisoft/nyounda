@@ -3,6 +3,7 @@ package com.kezisoft.nyounda.persistence.homeservice;
 import com.kezisoft.nyounda.application.homeservice.port.out.TagRepository;
 import com.kezisoft.nyounda.domain.homeservice.Tag;
 import com.kezisoft.nyounda.persistence.homeservice.entity.TagEntity;
+import com.kezisoft.nyounda.persistence.homeservice.jpa.JpaTagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -12,9 +13,9 @@ import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
-public class JpaTagRepository implements TagRepository {
+public class TagRepositoryAdapter implements TagRepository {
 
-    private final SpringJpaTagRepository repository;
+    private final JpaTagRepository repository;
 
     @Override
     public List<Tag> findAllTags(List<UUID> tagIds) {
