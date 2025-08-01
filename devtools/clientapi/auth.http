@@ -1,12 +1,9 @@
 ### Authenticate Phone Number
-GET {{host}}/authenticate?phonbbe={{phoneNumber}}&channel={{channel}}
+GET {{host}}/authenticate?phone={{phoneNumber}}&channel={{channel}}
 Content-Type: application/json
 Accept: application/json
 
 ### Verify Phone Number
-GET {{host}}/verify?phone={{phoneNumber}}&token={{token}}&locale={{locale}}
+GET {{host}}/verify?phone={{phoneNumber}}&pinCode={{token}}&locale={{locale}}
 Content-Type: application/json
 Accept: application/json
-
-### Test
-GET {{host}}/test
