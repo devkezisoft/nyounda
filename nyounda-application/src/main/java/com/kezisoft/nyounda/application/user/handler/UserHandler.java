@@ -24,4 +24,11 @@ public class UserHandler implements UserUseCase {
     public Optional<User> getById(UUID id) {
         return userRepository.findById(id);
     }
+
+    @Override
+    public Optional<User> getOrCreateUser(String phoneNumber) {
+        return userRepository.findByPhoneNumber(phoneNumber)
+                .or(() -> Optional.of(userRepository.save(User.createFromPhoneNumber(phoneNumber))));
+
+    }
 }
