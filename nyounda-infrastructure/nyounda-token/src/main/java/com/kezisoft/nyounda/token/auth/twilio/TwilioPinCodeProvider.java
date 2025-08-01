@@ -3,17 +3,23 @@ package com.kezisoft.nyounda.token.auth.twilio;
 import com.kezisoft.nyounda.application.auth.port.out.PinCodeProvider;
 import com.kezisoft.nyounda.domain.auth.Channel;
 import com.kezisoft.nyounda.domain.auth.VerificationStatus;
+import com.twilio.Twilio;
 import com.twilio.rest.verify.v2.service.Verification;
 import com.twilio.rest.verify.v2.service.VerificationCheck;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class TwilioPinCodeProvider implements PinCodeProvider {
     private final TwilioProperties twilioProperties;
+
+
+    public TwilioPinCodeProvider(TwilioProperties twilioProperties) {
+        this.twilioProperties = twilioProperties;
+        Twilio.init(twilioProperties.getAccountSid(), twilioProperties.getAuthToken());
+    }
+
 
     @Override
     public VerificationStatus send(String phoneNumber, Channel channel) {
