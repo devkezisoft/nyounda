@@ -10,4 +10,8 @@ public interface UserUseCase {
     Optional<User> getByPhoneNumber(String phoneNumber);
 
     Optional<User> getById(UUID id);
+
+    Optional<User> getOrCreateUser(String phoneNumber);
+
+
 }
