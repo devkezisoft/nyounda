@@ -1,0 +1,9 @@
+### Authenticate Phone Number
+GET {{host}}/authenticate?phoneNumber={{phoneNumber}}&channel={{channel}}
+Content-Type: application/json
+Accept: application/json
+
+### Verify Phone Number
+GET {{host}}/verify?phoneNumber={{phoneNumber}}&token={{token}}&locale={{locale}}
+Content-Type: application/json
+Accept: application/json
