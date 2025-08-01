@@ -1,6 +1,7 @@
 package com.kezisoft.nyounda.persistence.homeservice.entity;
 
 import com.kezisoft.nyounda.domain.homeservice.Review;
+import com.kezisoft.nyounda.persistence.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 

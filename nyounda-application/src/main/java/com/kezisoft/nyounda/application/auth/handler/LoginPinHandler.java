@@ -11,7 +11,9 @@ import com.kezisoft.nyounda.domain.auth.JwtToken;
 import com.kezisoft.nyounda.domain.auth.VerificationStatus;
 import com.kezisoft.nyounda.domain.user.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
+@Service
 @RequiredArgsConstructor
 public class LoginPinHandler implements LoginPinUseCase {
 

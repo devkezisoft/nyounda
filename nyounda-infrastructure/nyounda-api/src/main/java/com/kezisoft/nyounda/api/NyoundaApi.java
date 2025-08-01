@@ -8,6 +8,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 @SpringBootApplication(
         scanBasePackages = {
+                "com.kezisoft.nyounda.api",
                 "com.kezisoft.nyounda.application",
                 "com.kezisoft.nyounda.persistence",
                 "com.kezisoft.nyounda.token"

@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
 @EnableJpaRepositories(basePackages = "com.kezisoft.nyounda.persistence")
-@EntityScan(basePackages = "com.kezisoft.nyounda.persistence.homeservice.entity")
+@EntityScan(basePackages = "com.kezisoft.nyounda.persistence")
 public class PersistenceConfiguration {
 }

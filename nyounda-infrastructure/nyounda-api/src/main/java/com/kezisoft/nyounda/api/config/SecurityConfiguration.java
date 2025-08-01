@@ -21,8 +21,6 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 
 import java.io.IOException;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
@@ -55,7 +53,6 @@ public class SecurityConfiguration {
                         .requestMatchers("/actuator/health/**").permitAll()
                         .requestMatchers("/api/**").authenticated()
                 )
-                .httpBasic(withDefaults())
                 .with(securityConfigurerAdapter(), configurer -> {});
         return http.build();
         // @formatter:on

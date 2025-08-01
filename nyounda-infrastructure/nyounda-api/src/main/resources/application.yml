@@ -2,3 +2,7 @@ spring:
   mvc:
     problemdetails:
       enabled: true
+  config:
+    import: "classpath:application-persistence.yml"
+  application:
+    name: Nyounda-api

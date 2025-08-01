@@ -1,5 +1,7 @@
-package com.kezisoft.nyounda.persistence.homeservice.entity;
+package com.kezisoft.nyounda.persistence.user.entity;
 
+import com.kezisoft.nyounda.domain.user.User;
+import com.kezisoft.nyounda.domain.user.UserRole;
 import io.hypersistence.utils.hibernate.type.array.ListArrayType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,4 +38,12 @@ public class UserEntity {
     @Column(name = "roles", columnDefinition = "text[]")
     @Type(ListArrayType.class)
     private List<String> roles;
+
+    public User toDomain() {
+        return new User(id, fullName, avatarUrl, email, phone, roles.stream().map(UserRole::valueOf).toList());
+    }
+
+    public static UserEntity fromDomain(User user) {
+        return new UserEntity(user.id(), user.fullName(), user.avatarUrl(), user.email(), user.phone(), user.roles().stream().map(Enum::name).toList());
+    }
 }

@@ -10,10 +10,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -45,13 +47,13 @@ public class JWTFilter extends GenericFilterBean {
             }
 
             Authentication authentication = auth.map(
-                    domainAuthentication -> new UsernamePasswordAuthenticationToken(
-                            domainAuthentication.principal(),
-                            jwt,
-                            domainAuthentication.authorities()
-                                    .stream()
-                                    .map(authority -> new SimpleGrantedAuthority("ROLE_" + authority.name())).toList()
-                    )
+                    domainAuthentication -> {
+                        List<SimpleGrantedAuthority> authorities = domainAuthentication.authorities()
+                                .stream()
+                                .map(authority -> new SimpleGrantedAuthority("ROLE_" + authority.name())).toList();
+                        User principal = new User(domainAuthentication.principal(), "", authorities);
+                        return new UsernamePasswordAuthenticationToken(principal, jwt, authorities);
+                    }
             ).get();
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
