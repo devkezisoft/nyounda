@@ -8,23 +8,22 @@ import tech.jhipster.web.rest.errors.ProblemDetailWithCause.ProblemDetailWithCau
 import java.net.URI;
 
 @Getter
-public class BadRequestAlertException extends ErrorResponseException {
+public class UnprocessableEntityAlertException extends ErrorResponseException {
 
     private static final long serialVersionUID = 1L;
 
     private final String entityName;
-
     private final String errorKey;
 
-    public BadRequestAlertException(String defaultMessage, String entityName, String errorKey) {
+    public UnprocessableEntityAlertException(String defaultMessage, String entityName, String errorKey) {
         this(ErrorConstants.DEFAULT_TYPE, defaultMessage, entityName, errorKey);
     }
 
-    public BadRequestAlertException(URI type, String defaultMessage, String entityName, String errorKey) {
+    public UnprocessableEntityAlertException(URI type, String defaultMessage, String entityName, String errorKey) {
         super(
-                HttpStatus.BAD_REQUEST,
+                HttpStatus.UNPROCESSABLE_ENTITY,
                 ProblemDetailWithCauseBuilder.instance()
-                        .withStatus(HttpStatus.BAD_REQUEST.value())
+                        .withStatus(HttpStatus.UNPROCESSABLE_ENTITY.value())
                         .withType(type)
                         .withTitle(defaultMessage)
                         .withProperty("message", "error." + errorKey)
@@ -35,5 +34,4 @@ public class BadRequestAlertException extends ErrorResponseException {
         this.entityName = entityName;
         this.errorKey = errorKey;
     }
-
 }

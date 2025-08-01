@@ -7,14 +7,14 @@
 
     <!-- TABLE: user -->
     <changeSet id="001" author="gtemate">
-        <createTable tableName="user">
+        <createTable tableName="app_user">
             <column name="id" type="UUID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="email" type="varchar(255)">
-                <constraints nullable="false" unique="true"/>
-            </column>
-            <column name="password" type="varchar(255)"/>
+            <column name="full_name" type="varchar(255)"/>
+            <column name="avatar_url" type="varchar(255)"/>
+            <column name="email" type="varchar(255)"/>
+            <column name="phone" type="varchar(50)"/>
             <column name="roles" type="text[]"/>
         </createTable>
     </changeSet>
@@ -38,7 +38,7 @@
 
         <addForeignKeyConstraint baseTableName="provider"
                                  baseColumnNames="user_id"
-                                 referencedTableName="user"
+                                 referencedTableName="app_user"
                                  referencedColumnNames="id"
                                  constraintName="fk_provider_user"/>
     </changeSet>
@@ -90,7 +90,7 @@
 
         <addForeignKeyConstraint baseTableName="review"
                                  baseColumnNames="user_id"
-                                 referencedTableName="user"
+                                 referencedTableName="app_user"
                                  referencedColumnNames="id"
                                  constraintName="fk_review_user"/>
     </changeSet>

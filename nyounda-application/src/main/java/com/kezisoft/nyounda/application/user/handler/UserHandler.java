@@ -26,9 +26,8 @@ public class UserHandler implements UserUseCase {
     }
 
     @Override
-    public Optional<User> getOrCreateUser(String phoneNumber) {
+    public User getOrCreateUser(String phoneNumber) {
         return userRepository.findByPhoneNumber(phoneNumber)
-                .or(() -> Optional.of(userRepository.save(User.createFromPhoneNumber(phoneNumber))));
-
+                .orElseGet(() -> userRepository.save(User.createFromPhoneNumber(phoneNumber)));
     }
 }

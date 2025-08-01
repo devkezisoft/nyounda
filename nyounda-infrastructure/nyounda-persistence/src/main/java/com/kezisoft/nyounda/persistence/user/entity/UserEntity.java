@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "user")
+@Table(name = "app_user")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,12 +25,12 @@ public class UserEntity {
     @Id
     private UUID id;
 
-    @Column(nullable = false)
+    @Column
     private String fullName;
 
     private String avatarUrl;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String email;
 
     private String phone;

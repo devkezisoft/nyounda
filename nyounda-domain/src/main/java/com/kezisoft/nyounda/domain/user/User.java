@@ -13,12 +13,12 @@ public record User(
 ) {
     public static User createFromPhoneNumber(String phoneNumber) {
         return new User(
-                null,
+                UUID.randomUUID(),
                 null,
                 null,
                 null,
                 phoneNumber,
-                List.of()
+                List.of(UserRole.CLIENT)
         );
     }
 }

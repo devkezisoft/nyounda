@@ -1,6 +1,7 @@
 package com.kezisoft.nyounda.api.errors;
 
 import com.kezisoft.nyounda.application.auth.exception.InvalidPinCodeException;
+import com.kezisoft.nyounda.application.auth.exception.PinCodeGenerationCanceledException;
 import com.kezisoft.nyounda.application.shared.exception.CategoryNotFoundException;
 import com.kezisoft.nyounda.application.shared.exception.HomeServiceNotFoundException;
 import com.kezisoft.nyounda.application.shared.exception.NotFoundException;
@@ -123,6 +124,21 @@ public class ExceptionTranslator extends ResponseEntityExceptionHandler {
                 ).getBody(),
                 null,
                 HttpStatus.BAD_REQUEST,
+                request
+        );
+    }
+
+    @ExceptionHandler(PinCodeGenerationCanceledException.class)
+    public ResponseEntity<Object> handleInvalidPinCode(PinCodeGenerationCanceledException ex, NativeWebRequest request) {
+        return handleExceptionInternal(
+                ex,
+                new UnprocessableEntityAlertException(
+                        ex.getMessage(),
+                        "auth",
+                        "invalidPinCode"
+                ).getBody(),
+                null,
+                HttpStatus.UNPROCESSABLE_ENTITY,
                 request
         );
     }

@@ -8,5 +8,7 @@ import com.kezisoft.nyounda.domain.auth.VerificationStatus;
 public interface LoginPinUseCase {
     VerificationStatus sendLoginPin(GeneratePinCommand generatePinCommand);
 
-    JwtToken verifyLoginPin(VerifyPinCommand verifyPinCommand);
+    JwtToken verifyAndCreateToken(VerifyPinCommand verifyPinCommand);
+
+    JwtToken createToken(String phone);
 }

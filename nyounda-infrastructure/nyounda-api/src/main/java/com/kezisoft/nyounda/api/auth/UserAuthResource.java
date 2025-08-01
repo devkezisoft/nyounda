@@ -3,6 +3,7 @@ package com.kezisoft.nyounda.api.auth;
 import com.kezisoft.nyounda.api.auth.request.GeneratePinRequest;
 import com.kezisoft.nyounda.api.auth.request.VerifyPinRequest;
 import com.kezisoft.nyounda.api.errors.BadRequestAlertException;
+import com.kezisoft.nyounda.application.auth.command.GeneratePinCommand;
 import com.kezisoft.nyounda.application.auth.port.in.LoginPinUseCase;
 import com.kezisoft.nyounda.domain.auth.JwtToken;
 import com.kezisoft.nyounda.domain.auth.VerificationStatus;
@@ -35,15 +36,9 @@ public class UserAuthResource {
      */
     @GetMapping("/authenticate")
     public ResponseEntity<VerificationStatus> authenticate(GeneratePinRequest request) throws BadRequestAlertException {
-        // for GOOGLE and APPLE verification
-        if (request.phone().startsWith("+23799999")) {
-            return ResponseEntity.ok(VerificationStatus.PENDING);
-        }
-
-        var status = loginPinUseCase.sendLoginPin(request.toCommand());
-        if (status == VerificationStatus.CANCELED) {
-            throw new BadRequestAlertException("An error occur during Generating pinCode", ENTITY_NAME, "errorGeneratePinCode");
-        }
+        log.debug("generate pincode : {}", request);
+        GeneratePinCommand command = request.toCommand();
+        var status = loginPinUseCase.sendLoginPin(command);
         return ResponseEntity.ok(status);
     }
 
@@ -56,20 +51,13 @@ public class UserAuthResource {
      */
     @GetMapping("/verify")
     public ResponseEntity<JwtToken> verify(VerifyPinRequest request) throws BadRequestAlertException {
-        // for GOOGLE and APPLE verification
-        if (request.phone().startsWith("+23799999") && request.pinCode().startsWith("9999")) {
-            return generateJwtToken(request);
-        }
-        return generateJwtToken(request);
-    }
-
-
-    private ResponseEntity<JwtToken> generateJwtToken(VerifyPinRequest request) {
-        log.debug("Find or create user by phone number: {}", request.phone());
+        log.debug("verify pincode : {}", request);
         HttpHeaders httpHeaders = new HttpHeaders();
+        JwtToken jwtToken = loginPinUseCase.verifyAndCreateToken(request.toCommand());
         log.info("Generate JWT token request: {}", request);
-        JwtToken jwtToken = loginPinUseCase.verifyLoginPin(request.toCommand());
         httpHeaders.add(AUTHORIZATION_HEADER, "Bearer " + jwtToken.token());
         return new ResponseEntity<>(jwtToken, httpHeaders, HttpStatus.OK);
     }
+
+
 }
