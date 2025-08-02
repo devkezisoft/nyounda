@@ -6,4 +6,4 @@ twilio:
   verify-sid:
 jwt:
   secret:
-  token-validity-in-seconds:
+  token-validity-in-seconds: 86400

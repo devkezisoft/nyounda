@@ -4,6 +4,6 @@ Content-Type: application/json
 Accept: application/json
 
 ### Verify Phone Number
-GET {{host}}/verify?phone={{phoneNumber}}&pinCode={{token}}&locale={{locale}}
+GET {{host}}/verify?phone={{phoneNumber}}&pinCode={{pinCode}}&locale={{locale}}
 Content-Type: application/json
 Accept: application/json

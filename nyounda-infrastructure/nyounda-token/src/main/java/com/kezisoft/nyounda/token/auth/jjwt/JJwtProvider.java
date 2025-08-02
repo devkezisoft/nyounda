@@ -44,7 +44,8 @@ public class JJwtProvider implements JwtProvider {
         Key key = Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes());
         String compact = Jwts.builder()
                 .subject(user.id().toString())
-                .claim(AUTHORITIES_KEY, authorities).signWith(key)
+                .claim(AUTHORITIES_KEY, authorities)
+                .signWith(key)
                 .expiration(validity)
                 .compact();
         return new JwtToken(compact, Instant.ofEpochMilli(date));
@@ -77,7 +78,7 @@ public class JJwtProvider implements JwtProvider {
     @Override
     public Optional<Authentication> retreiveAuthentication(String authToken) {
         try {
-            Claims claims = parser.parse(authToken).accept(Jwe.CLAIMS).getPayload();
+            Claims claims = parser.parseSignedClaims(authToken).getPayload();
             List<UserRole> authorities =
                     Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                             .map(r -> {
@@ -89,7 +90,7 @@ public class JJwtProvider implements JwtProvider {
             return Optional.of(new Authentication(claims.getSubject(), authToken, authorities));
         } catch (Exception e) {
             log.error("cannot parse JWT token: {}", e.getMessage());
+            throw new RuntimeException(e);
         }
-        return Optional.empty();
     }
 }
