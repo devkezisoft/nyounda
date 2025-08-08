@@ -7,6 +7,7 @@ import com.kezisoft.nyounda.application.auth.exception.PinCodeGenerationCanceled
 import com.kezisoft.nyounda.application.auth.port.in.LoginPinUseCase;
 import com.kezisoft.nyounda.application.auth.port.out.JwtProvider;
 import com.kezisoft.nyounda.application.auth.port.out.PinCodeProvider;
+import com.kezisoft.nyounda.application.shared.exception.NotFoundException;
 import com.kezisoft.nyounda.application.user.port.in.UserUseCase;
 import com.kezisoft.nyounda.domain.auth.JwtToken;
 import com.kezisoft.nyounda.domain.auth.VerificationStatus;
@@ -49,7 +50,8 @@ public class LoginPinHandler implements LoginPinUseCase {
 
     @Override
     public JwtToken createToken(String phone) {
-        User user = userUseCase.getOrCreateUser(phone);
+        User user = userUseCase.getUserByPhone(phone)
+                .orElseThrow(() -> new NotFoundException("User not found for phone: " + phone));
         return jwtProvider.createToken(user);
     }
 

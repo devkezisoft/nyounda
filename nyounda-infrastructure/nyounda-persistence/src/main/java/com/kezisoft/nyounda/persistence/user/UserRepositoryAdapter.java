@@ -17,7 +17,7 @@ public class UserRepositoryAdapter implements UserRepository {
     private final JpaUserRepository repository;
 
     @Override
-    public Optional<User> findByPhoneNumber(String phoneNumber) {
+    public Optional<User> findByPhone(String phoneNumber) {
         return repository.findByPhone(phoneNumber)
                 .map(UserEntity::toDomain);
     }

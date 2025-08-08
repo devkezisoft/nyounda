@@ -12,7 +12,7 @@ public interface UserUseCase {
 
     Optional<User> getById(UUID id);
 
-    User getOrCreateUser(String phoneNumber);
+    Optional<User> getUserByPhone(String phone);
 
     User registerUser(RegisterUserCommand registerUserCommand);
 }

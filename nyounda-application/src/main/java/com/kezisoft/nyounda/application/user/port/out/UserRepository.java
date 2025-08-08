@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface UserRepository {
-    Optional<User> findByPhoneNumber(String phoneNumber);
+    Optional<User> findByPhone(String phone);
 
     User save(User user);
 
