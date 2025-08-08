@@ -1,5 +1,6 @@
 package com.kezisoft.nyounda.application.user.port.in;
 
+import com.kezisoft.nyounda.application.user.command.RegisterUserCommand;
 import com.kezisoft.nyounda.domain.user.User;
 
 import java.util.Optional;
@@ -13,5 +14,5 @@ public interface UserUseCase {
 
     User getOrCreateUser(String phoneNumber);
 
-
+    User registerUser(RegisterUserCommand registerUserCommand);
 }

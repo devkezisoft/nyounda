@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -18,6 +19,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.io.IOException;
 
@@ -38,6 +42,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // @formatter:off
         http
+                .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint(problemAuthenticationEntryPoint())
@@ -47,6 +52,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/api/authenticate").permitAll()
                         .requestMatchers("/api/login").permitAll()
+                        .requestMatchers("/api/register").permitAll()
                         .requestMatchers("/api/verify").permitAll()
                         .requestMatchers("/actuator/info").permitAll()
                         .requestMatchers("/actuator/health").permitAll()
@@ -80,6 +86,19 @@ public class SecurityConfiguration {
             problemDetail.setDetail(accessDeniedException.getMessage());
             writeProblem(response, problemDetail, HttpStatus.FORBIDDEN);
         };
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOriginPattern("*"); // Allow all origins (use specific domains in prod)
+        configuration.addAllowedHeader("*");        // Allow all headers
+        configuration.addAllowedMethod("*");        // Allow GET, POST, PUT, DELETE, etc.
+        configuration.setAllowCredentials(true);    // Allow cookies (only if needed)
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     private void writeProblem(HttpServletResponse response, ProblemDetail problemDetail, HttpStatus status) throws IOException {

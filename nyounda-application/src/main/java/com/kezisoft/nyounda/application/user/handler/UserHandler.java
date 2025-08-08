@@ -1,5 +1,6 @@
 package com.kezisoft.nyounda.application.user.handler;
 
+import com.kezisoft.nyounda.application.user.command.RegisterUserCommand;
 import com.kezisoft.nyounda.application.user.port.in.UserUseCase;
 import com.kezisoft.nyounda.application.user.port.out.UserRepository;
 import com.kezisoft.nyounda.domain.user.User;
@@ -29,5 +30,16 @@ public class UserHandler implements UserUseCase {
     public User getOrCreateUser(String phoneNumber) {
         return userRepository.findByPhoneNumber(phoneNumber)
                 .orElseGet(() -> userRepository.save(User.createFromPhoneNumber(phoneNumber)));
+    }
+
+    @Override
+    public User registerUser(RegisterUserCommand registerUserCommand) {
+        User user = RegisterUserCommand.toDomain(registerUserCommand);
+        User savedUser = userRepository.save(user);
+        // Automatically send a login pin after registration
+        // using notify system to avoid circular dependency
+        // notifier.notify(
+        //         new GeneratePinCommand(savedUser.getPhoneNumber(), Channel.SMS)
+        return savedUser;
     }
 }

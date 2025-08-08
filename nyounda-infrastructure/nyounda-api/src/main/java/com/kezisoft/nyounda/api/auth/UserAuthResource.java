@@ -12,9 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Controller to authenticate users.
@@ -49,8 +47,8 @@ public class UserAuthResource {
      * @param request : verification token, phone number, langKey and token request
      * @return JWTToken the token created
      */
-    @GetMapping("/verify")
-    public ResponseEntity<JwtToken> verify(VerifyPinRequest request) throws BadRequestAlertException {
+    @PostMapping("/verify")
+    public ResponseEntity<JwtToken> verify(@RequestBody VerifyPinRequest request) throws BadRequestAlertException {
         log.debug("verify pincode : {}", request);
         HttpHeaders httpHeaders = new HttpHeaders();
         JwtToken jwtToken = loginPinUseCase.verifyAndCreateToken(request.toCommand());
