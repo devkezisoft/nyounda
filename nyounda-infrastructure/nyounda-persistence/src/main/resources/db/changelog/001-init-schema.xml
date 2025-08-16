@@ -3,12 +3,17 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-                        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.22.xsd">
+                      https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.22.xsd">
 
-    <!-- TABLE: user -->
-    <changeSet id="001" author="gtemate">
+    <changeSet id="000-ext" author="nyounda">
+        <!-- gen_random_uuid() lives in pgcrypto -->
+        <sql>CREATE
+        EXTENSION IF NOT EXISTS pgcrypto;</sql>
+    </changeSet>
+
+    <changeSet id="001-users" author="nyounda">
         <createTable tableName="app_user">
-            <column name="id" type="UUID">
+            <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="full_name" type="varchar(255)"/>
@@ -16,115 +21,136 @@
             <column name="email" type="varchar(255)"/>
             <column name="phone" type="varchar(50)"/>
             <column name="roles" type="text[]"/>
+            <column name="created_at" type="timestamptz" defaultValueComputed="now()"/>
         </createTable>
+        <addDefaultValue tableName="app_user" columnName="id" defaultValueComputed="gen_random_uuid()"/>
+        <createIndex tableName="app_user" indexName="idx_user_email_unique" unique="true">
+            <column name="email"/>
+        </createIndex>
+        <createIndex tableName="app_user" indexName="idx_user_phone_unique" unique="true">
+            <column name="phone"/>
+        </createIndex>
     </changeSet>
 
-    <!-- TABLE: provider -->
-    <changeSet id="002" author="gtemate">
+    <changeSet id="002-provider" author="nyounda">
         <createTable tableName="provider">
-            <column name="id" type="UUID">
-                <constraints primaryKey="true"/>
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="user_id" type="UUID"/>
+            <column name="user_id" type="uuid"/>
             <column name="full_name" type="varchar(255)"/>
             <column name="avatar_url" type="varchar(255)"/>
-            <column name="average_rating" type="decimal(2,1)"/>
+            <column name="average_rating" type="numeric(2,1)"/>
             <column name="number_of_reviews" type="int"/>
             <column name="location" type="varchar(255)"/>
             <column name="years_experience" type="int"/>
             <column name="jobs_done" type="int"/>
             <column name="response_time" type="varchar(255)"/>
+            <column name="created_at" type="timestamptz" defaultValueComputed="now()"/>
         </createTable>
-
-        <addForeignKeyConstraint baseTableName="provider"
-                                 baseColumnNames="user_id"
-                                 referencedTableName="app_user"
-                                 referencedColumnNames="id"
-                                 constraintName="fk_provider_user"/>
+        <addDefaultValue tableName="provider" columnName="id" defaultValueComputed="gen_random_uuid()"/>
+        <addForeignKeyConstraint baseTableName="provider" baseColumnNames="user_id"
+                                 referencedTableName="app_user" referencedColumnNames="id"
+                                 constraintName="fk_provider_user" onDelete="CASCADE"/>
     </changeSet>
 
-    <!-- TABLE: category -->
-    <changeSet id="003" author="gtemate">
+    <changeSet id="003-category" author="nyounda">
         <createTable tableName="category">
-            <column name="id" type="UUID">
-                <constraints primaryKey="true"/>
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="name" type="varchar(255)"/>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="emoji" type="varchar(8)"/>
             <column name="description" type="text"/>
+            <column name="parent_id" type="uuid"/>
+            <column name="created_at" type="timestamptz" defaultValueComputed="now()"/>
         </createTable>
+        <addDefaultValue tableName="category" columnName="id" defaultValueComputed="gen_random_uuid()"/>
+        <addForeignKeyConstraint baseTableName="category" baseColumnNames="parent_id"
+                                 referencedTableName="category" referencedColumnNames="id"
+                                 constraintName="fk_category_parent" onDelete="CASCADE"/>
     </changeSet>
 
-    <!-- TABLE: tag -->
-    <changeSet id="004" author="gtemate">
+    <changeSet id="004-tag" author="nyounda">
         <createTable tableName="tag">
-            <column name="id" type="UUID">
-                <constraints primaryKey="true"/>
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
             </column>
+            <column name="key" type="varchar(64)"/>
             <column name="label" type="varchar(255)"/>
             <column name="status" type="varchar(20)"/>
         </createTable>
+        <addDefaultValue tableName="tag" columnName="id" defaultValueComputed="gen_random_uuid()"/>
+        <createIndex tableName="tag" indexName="uk_tag_key" unique="true">
+            <column name="key"/>
+        </createIndex>
     </changeSet>
 
-    <!-- TABLE: service_image -->
-    <changeSet id="005" author="gtemate">
+    <changeSet id="005-service-image" author="nyounda">
         <createTable tableName="service_image">
-            <column name="id" type="UUID">
-                <constraints primaryKey="true"/>
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="url" type="varchar(512)"/>
             <column name="status" type="varchar(20)"/>
+            <column name="created_at" type="timestamptz" defaultValueComputed="now()"/>
         </createTable>
+        <addDefaultValue tableName="service_image" columnName="id" defaultValueComputed="gen_random_uuid()"/>
     </changeSet>
 
-    <!-- TABLE: review -->
-    <changeSet id="006" author="gtemate">
+    <changeSet id="006-review" author="nyounda">
         <createTable tableName="review">
-            <column name="id" type="UUID">
-                <constraints primaryKey="true"/>
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="user_id" type="UUID"/>
-            <column name="rating" type="decimal(2,1)"/>
+            <column name="user_id" type="uuid"/>
+            <column name="rating" type="numeric(2,1)"/>
             <column name="comment" type="text"/>
-            <column name="created_at" type="timestamp"/>
+            <column name="created_at" type="timestamptz" defaultValueComputed="now()"/>
         </createTable>
-
-        <addForeignKeyConstraint baseTableName="review"
-                                 baseColumnNames="user_id"
-                                 referencedTableName="app_user"
-                                 referencedColumnNames="id"
-                                 constraintName="fk_review_user"/>
+        <addDefaultValue tableName="review" columnName="id" defaultValueComputed="gen_random_uuid()"/>
+        <addForeignKeyConstraint baseTableName="review" baseColumnNames="user_id"
+                                 referencedTableName="app_user" referencedColumnNames="id"
+                                 constraintName="fk_review_user" onDelete="SET NULL"/>
     </changeSet>
 
-    <!-- TABLE: home_service -->
-    <changeSet id="007" author="gtemate">
-        <createTable tableName="home_service">
-            <column name="id" type="UUID">
-                <constraints primaryKey="true"/>
+
+    <changeSet id="007-provider-skill" author="nyounda">
+        <createTable tableName="provider_skill">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="title" type="varchar(255)"/>
+            <column name="provider_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
             <column name="description" type="text"/>
-            <column name="pricing_type" type="varchar(20)"/>
-            <column name="price" type="decimal(10,2)"/>
-            <column name="minimum_to_accept_booking" type="int"/>
-            <column name="availability_days" type="text[]"/>
-            <column name="category_id" type="UUID"/>
-            <column name="provider_id" type="UUID"/>
-            <column name="image_ids" type="uuid[]"/>
-            <column name="tag_ids" type="uuid[]"/>
-            <column name="review_ids" type="uuid[]"/>
+            <column name="experience_years" type="int"/>
+            <column name="rate_cfa" type="numeric(12,2)"/>
+            <column name="created_at" type="timestamptz" defaultValueComputed="now()"/>
         </createTable>
-
-        <addForeignKeyConstraint baseTableName="home_service"
-                                 baseColumnNames="category_id"
-                                 referencedTableName="category"
-                                 referencedColumnNames="id"
-                                 constraintName="fk_service_category"/>
-
-        <addForeignKeyConstraint baseTableName="home_service"
-                                 baseColumnNames="provider_id"
-                                 referencedTableName="provider"
-                                 referencedColumnNames="id"
-                                 constraintName="fk_service_provider"/>
+        <addDefaultValue tableName="provider_skill" columnName="id" defaultValueComputed="gen_random_uuid()"/>
+        <addForeignKeyConstraint baseTableName="provider_skill" baseColumnNames="provider_id"
+                                 referencedTableName="provider" referencedColumnNames="id"
+                                 constraintName="fk_pskill_provider" onDelete="CASCADE"/>
+        <addForeignKeyConstraint baseTableName="provider_skill" baseColumnNames="category_id"
+                                 referencedTableName="category" referencedColumnNames="id"
+                                 constraintName="fk_pskill_category" onDelete="CASCADE"/>
+        <addUniqueConstraint tableName="provider_skill" columnNames="provider_id, category_id"
+                             constraintName="uk_pskill_provider_category"/>
     </changeSet>
 
+    <changeSet id="008-seed-categories" author="nyounda" context="seed">
+        <loadData tableName="category" separator="," file="db/data/categories.csv" encoding="UTF-8">
+            <column name="id" type="uuid"/>
+            <column name="name" type="string"/>
+            <column name="emoji" type="string"/>
+            <column name="description" type="string"/>
+            <column name="parent_id" type="uuid"/>
+        </loadData>
+    </changeSet>
 </databaseChangeLog>
