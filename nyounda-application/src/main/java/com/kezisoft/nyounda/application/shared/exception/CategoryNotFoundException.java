@@ -4,6 +4,6 @@ import com.kezisoft.nyounda.domain.homeservice.CategoryId;
 
 public class CategoryNotFoundException extends NotFoundException {
     public CategoryNotFoundException(CategoryId id) {
-        super("Category with ID " + id + " was not found");
+        super("Category with ID " + id + " was not found", "category", "categoryNotFound");
     }
 }

@@ -4,6 +4,6 @@ import com.kezisoft.nyounda.domain.homeservice.ProviderId;
 
 public class ProviderNotFoundException extends NotFoundException {
     public ProviderNotFoundException(ProviderId id) {
-        super("Provider with ID " + id + " was not found");
+        super("Provider with ID " + id + " was not found", "provider", "providerNotFound");
     }
 }

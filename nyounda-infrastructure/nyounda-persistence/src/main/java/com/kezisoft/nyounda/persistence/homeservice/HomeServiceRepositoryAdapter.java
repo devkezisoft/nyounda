@@ -1,5 +1,6 @@
 package com.kezisoft.nyounda.persistence.homeservice;
 
+import com.kezisoft.nyounda.application.categories.port.out.CategoriesRepository;
 import com.kezisoft.nyounda.application.homeservice.port.out.*;
 import com.kezisoft.nyounda.application.shared.exception.CategoryNotFoundException;
 import com.kezisoft.nyounda.application.shared.exception.ProviderNotFoundException;
@@ -25,7 +26,7 @@ public class HomeServiceRepositoryAdapter implements HomeServiceRepository {
     private final TagRepository tagRepository;
     private final ReviewRepository reviewRepository;
     private final ServiceImageRepository imageRepository;
-    private final CategoryRepository categoryRepository;
+    private final CategoriesRepository categoryRepository;
     private final ProviderRepository providerRepository;
 
     @Override

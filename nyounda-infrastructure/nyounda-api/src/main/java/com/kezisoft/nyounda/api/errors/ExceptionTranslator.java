@@ -2,10 +2,7 @@ package com.kezisoft.nyounda.api.errors;
 
 import com.kezisoft.nyounda.application.auth.exception.InvalidPinCodeException;
 import com.kezisoft.nyounda.application.auth.exception.PinCodeGenerationCanceledException;
-import com.kezisoft.nyounda.application.shared.exception.CategoryNotFoundException;
-import com.kezisoft.nyounda.application.shared.exception.HomeServiceNotFoundException;
 import com.kezisoft.nyounda.application.shared.exception.NotFoundException;
-import com.kezisoft.nyounda.application.shared.exception.ProviderNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -73,40 +70,9 @@ public class ExceptionTranslator extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Object> handleNotFound(NotFoundException ex, NativeWebRequest request) {
-        if (ex instanceof CategoryNotFoundException e) {
-            return handleExceptionInternal(
-                    e,
-                    new NotFoundAlertException(e.getMessage(), "category", "categoryNotFound").getBody(),
-                    null,
-                    HttpStatus.NOT_FOUND,
-                    request
-            );
-        }
-
-        if (ex instanceof HomeServiceNotFoundException e) {
-            return handleExceptionInternal(
-                    e,
-                    new NotFoundAlertException(e.getMessage(), "homeService", "homeServiceNotFound").getBody(),
-                    null,
-                    HttpStatus.NOT_FOUND,
-                    request
-            );
-        }
-
-        if (ex instanceof ProviderNotFoundException e) {
-            return handleExceptionInternal(
-                    e,
-                    new NotFoundAlertException(e.getMessage(), "provider", "providerNotFound").getBody(),
-                    null,
-                    HttpStatus.NOT_FOUND,
-                    request
-            );
-        }
-
-        // fallback générique si jamais un autre type apparaît
         return handleExceptionInternal(
                 ex,
-                new NotFoundAlertException(ex.getMessage(), "unknown", "notFound").getBody(),
+                new NotFoundAlertException(ex.getMessage(), ex.getEntityName(), ex.getErrorKey()).getBody(),
                 null,
                 HttpStatus.NOT_FOUND,
                 request

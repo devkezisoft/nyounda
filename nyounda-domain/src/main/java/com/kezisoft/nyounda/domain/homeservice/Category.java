@@ -1,4 +1,10 @@
 package com.kezisoft.nyounda.domain.homeservice;
 
-public record Category(CategoryId id, String name, String description) {
+import java.util.List;
+
+public record Category(CategoryId id,
+                       String name,
+                       String description,
+                       String emoji,
+                       List<Category> subcategories) {
 }

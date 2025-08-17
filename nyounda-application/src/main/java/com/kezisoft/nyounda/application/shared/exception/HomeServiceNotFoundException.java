@@ -4,6 +4,6 @@ import com.kezisoft.nyounda.domain.homeservice.HomeServiceId;
 
 public class HomeServiceNotFoundException extends NotFoundException {
     public HomeServiceNotFoundException(HomeServiceId id) {
-        super("HomeService with ID " + id + " was not found");
+        super("HomeService with ID " + id + " was not found", "homeService", "homeServiceNotFound");
     }
 }

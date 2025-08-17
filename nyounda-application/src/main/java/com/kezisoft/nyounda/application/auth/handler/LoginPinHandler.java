@@ -51,7 +51,7 @@ public class LoginPinHandler implements LoginPinUseCase {
     @Override
     public JwtToken createToken(String phone) {
         User user = userUseCase.getUserByPhone(phone)
-                .orElseThrow(() -> new NotFoundException("User not found for phone: " + phone));
+                .orElseThrow(() -> new NotFoundException("User not found for phone: " + phone, "user", "UserNotFound"));
         return jwtProvider.createToken(user);
     }
 

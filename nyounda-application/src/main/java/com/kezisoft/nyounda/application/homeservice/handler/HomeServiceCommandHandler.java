@@ -1,9 +1,13 @@
 package com.kezisoft.nyounda.application.homeservice.handler;
 
+import com.kezisoft.nyounda.application.categories.port.out.CategoriesRepository;
 import com.kezisoft.nyounda.application.homeservice.command.CreateServiceCommand;
 import com.kezisoft.nyounda.application.homeservice.command.UpdateServiceCommand;
 import com.kezisoft.nyounda.application.homeservice.port.in.HomeServiceCommandUseCase;
-import com.kezisoft.nyounda.application.homeservice.port.out.*;
+import com.kezisoft.nyounda.application.homeservice.port.out.HomeServiceRepository;
+import com.kezisoft.nyounda.application.homeservice.port.out.ProviderRepository;
+import com.kezisoft.nyounda.application.homeservice.port.out.ServiceImageRepository;
+import com.kezisoft.nyounda.application.homeservice.port.out.TagRepository;
 import com.kezisoft.nyounda.application.shared.exception.CategoryNotFoundException;
 import com.kezisoft.nyounda.application.shared.exception.ProviderNotFoundException;
 import com.kezisoft.nyounda.domain.homeservice.CategoryId;
@@ -22,7 +26,7 @@ public class HomeServiceCommandHandler implements HomeServiceCommandUseCase {
 
     private final HomeServiceRepository homeServiceRepository;
     private final ProviderRepository providerRepository;
-    private final CategoryRepository categoryRepository;
+    private final CategoriesRepository categoryRepository;
     private final ServiceImageRepository serviceImageRepository;
     private final TagRepository tagRepository;
 
