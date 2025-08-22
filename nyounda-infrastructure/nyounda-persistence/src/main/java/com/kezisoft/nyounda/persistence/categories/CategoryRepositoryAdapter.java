@@ -1,8 +1,8 @@
 package com.kezisoft.nyounda.persistence.categories;
 
 import com.kezisoft.nyounda.application.categories.port.out.CategoriesRepository;
-import com.kezisoft.nyounda.domain.homeservice.Category;
-import com.kezisoft.nyounda.domain.homeservice.CategoryId;
+import com.kezisoft.nyounda.domain.categories.Category;
+import com.kezisoft.nyounda.domain.categories.CategoryId;
 import com.kezisoft.nyounda.persistence.categories.entity.CategoryEntity;
 import com.kezisoft.nyounda.persistence.categories.jpa.JpaCategoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +20,7 @@ public class CategoryRepositoryAdapter implements CategoriesRepository {
     @Override
     public List<Category> findAllCategories() {
         return repository.findAll().stream()
+                .filter(CategoryEntity::isRoot)
                 .map(CategoryEntity::toDomain)
                 .toList();
     }

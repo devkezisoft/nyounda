@@ -130,7 +130,7 @@
             </column>
             <column name="description" type="text"/>
             <column name="experience_years" type="int"/>
-            <column name="rate_cfa" type="numeric(12,2)"/>
+            <column name="rate" type="jsonb"/>
             <column name="created_at" type="timestamptz" defaultValueComputed="now()"/>
         </createTable>
         <addDefaultValue tableName="provider_skill" columnName="id" defaultValueComputed="gen_random_uuid()"/>

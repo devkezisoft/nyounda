@@ -3,8 +3,9 @@ package com.kezisoft.nyounda.api.account;
 
 import com.kezisoft.nyounda.api.account.request.AccountCreateRequest;
 import com.kezisoft.nyounda.api.account.view.AccountView;
+import com.kezisoft.nyounda.api.security.SecurityUtils;
+import com.kezisoft.nyounda.application.shared.exception.AccountNotFoundException;
 import com.kezisoft.nyounda.application.user.port.in.UserUseCase;
-import com.kezisoft.nyounda.application.user.port.out.AccountUseCase;
 import com.kezisoft.nyounda.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import tech.jhipster.web.util.HeaderUtil;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.UUID;
 
 /**
  * REST controller for managing the current user's account.
@@ -23,16 +25,9 @@ import java.net.URISyntaxException;
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class AccountResource {
-    static class AccountResourceException extends RuntimeException {
-
-        AccountResourceException(String message) {
-            super(message);
-        }
-    }
 
     private final Logger log = LoggerFactory.getLogger(AccountResource.class);
 
-    private final AccountUseCase accountUseCase;
     private final UserUseCase userUseCase;
 
     /**
@@ -43,10 +38,9 @@ public class AccountResource {
      */
     @GetMapping("/accounts")
     public AccountView getAccount() {
-        return accountUseCase
-                .getCurrentUser()
+        return SecurityUtils.getCurrentUserLogin().flatMap(id -> userUseCase.getById(UUID.fromString(id)))
                 .map(AccountView::fromDomain)
-                .orElseThrow(() -> new AccountResourceException("User could not be found"));
+                .orElseThrow(AccountNotFoundException::new);
     }
 
     /**

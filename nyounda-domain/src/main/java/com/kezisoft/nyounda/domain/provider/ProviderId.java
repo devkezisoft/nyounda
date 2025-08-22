@@ -1,4 +1,4 @@
-package com.kezisoft.nyounda.domain.homeservice;
+package com.kezisoft.nyounda.domain.provider;
 
 import java.util.UUID;
 

@@ -1,6 +1,6 @@
 package com.kezisoft.nyounda.application.categories.port.in;
 
-import com.kezisoft.nyounda.domain.homeservice.Category;
+import com.kezisoft.nyounda.domain.categories.Category;
 
 import java.util.List;
 

@@ -2,7 +2,7 @@ package com.kezisoft.nyounda.application.categories.handler;
 
 import com.kezisoft.nyounda.application.categories.port.in.CategoriesUseCase;
 import com.kezisoft.nyounda.application.categories.port.out.CategoriesRepository;
-import com.kezisoft.nyounda.domain.homeservice.Category;
+import com.kezisoft.nyounda.domain.categories.Category;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,5 +1,8 @@
 package com.kezisoft.nyounda.domain.homeservice;
 
+import com.kezisoft.nyounda.domain.categories.Category;
+import com.kezisoft.nyounda.domain.provider.Provider;
+
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.util.List;

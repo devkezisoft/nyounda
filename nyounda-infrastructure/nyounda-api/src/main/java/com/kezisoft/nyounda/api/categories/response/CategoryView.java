@@ -1,6 +1,6 @@
 package com.kezisoft.nyounda.api.categories.response;
 
-import com.kezisoft.nyounda.domain.homeservice.Category;
+import com.kezisoft.nyounda.domain.categories.Category;
 
 import java.util.List;
 import java.util.UUID;

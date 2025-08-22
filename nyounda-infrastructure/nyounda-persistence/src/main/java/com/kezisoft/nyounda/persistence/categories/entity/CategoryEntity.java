@@ -1,7 +1,7 @@
 package com.kezisoft.nyounda.persistence.categories.entity;
 
-import com.kezisoft.nyounda.domain.homeservice.Category;
-import com.kezisoft.nyounda.domain.homeservice.CategoryId;
+import com.kezisoft.nyounda.domain.categories.Category;
+import com.kezisoft.nyounda.domain.categories.CategoryId;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -54,4 +54,7 @@ public class CategoryEntity {
         );
     }
 
+    public boolean isRoot() {
+        return this.parent == null;
+    }
 }

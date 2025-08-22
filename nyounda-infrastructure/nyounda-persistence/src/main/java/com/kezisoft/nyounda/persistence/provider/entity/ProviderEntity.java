@@ -1,11 +1,13 @@
-package com.kezisoft.nyounda.persistence.homeservice.entity;
+package com.kezisoft.nyounda.persistence.provider.entity;
 
-import com.kezisoft.nyounda.domain.homeservice.Provider;
-import com.kezisoft.nyounda.domain.homeservice.ProviderId;
+import com.kezisoft.nyounda.domain.provider.Provider;
+import com.kezisoft.nyounda.domain.provider.ProviderId;
+import com.kezisoft.nyounda.domain.provider.ProviderSkill;
 import com.kezisoft.nyounda.persistence.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -36,7 +38,7 @@ public class ProviderEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
-    public Provider toDomain() {
+    public Provider toDomain(List<ProviderSkill> skills) {
         return new Provider(
                 ProviderId.valueOf(id),
                 user.getFullName(),
@@ -46,7 +48,8 @@ public class ProviderEntity {
                 location,
                 yearsExperience,
                 jobsDone,
-                responseTime
+                responseTime,
+                skills
         );
     }
 }

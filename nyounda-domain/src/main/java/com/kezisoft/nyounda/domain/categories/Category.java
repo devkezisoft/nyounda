@@ -1,4 +1,4 @@
-package com.kezisoft.nyounda.domain.homeservice;
+package com.kezisoft.nyounda.domain.categories;
 
 import java.util.List;
 

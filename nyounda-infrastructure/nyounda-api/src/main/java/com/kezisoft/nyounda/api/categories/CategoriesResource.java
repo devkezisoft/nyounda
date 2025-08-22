@@ -3,7 +3,7 @@ package com.kezisoft.nyounda.api.categories;
 import com.kezisoft.nyounda.api.categories.response.CategoryView;
 import com.kezisoft.nyounda.api.errors.BadRequestAlertException;
 import com.kezisoft.nyounda.application.categories.port.in.CategoriesUseCase;
-import com.kezisoft.nyounda.domain.homeservice.Category;
+import com.kezisoft.nyounda.domain.categories.Category;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

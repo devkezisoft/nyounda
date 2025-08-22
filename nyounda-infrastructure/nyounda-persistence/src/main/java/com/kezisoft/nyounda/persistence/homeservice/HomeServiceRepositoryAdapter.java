@@ -1,13 +1,17 @@
 package com.kezisoft.nyounda.persistence.homeservice;
 
 import com.kezisoft.nyounda.application.categories.port.out.CategoriesRepository;
-import com.kezisoft.nyounda.application.homeservice.port.out.*;
+import com.kezisoft.nyounda.application.homeservice.port.out.HomeServiceRepository;
+import com.kezisoft.nyounda.application.homeservice.port.out.ReviewRepository;
+import com.kezisoft.nyounda.application.homeservice.port.out.ServiceImageRepository;
+import com.kezisoft.nyounda.application.homeservice.port.out.TagRepository;
+import com.kezisoft.nyounda.application.provider.port.out.ProviderRepository;
 import com.kezisoft.nyounda.application.shared.exception.CategoryNotFoundException;
 import com.kezisoft.nyounda.application.shared.exception.ProviderNotFoundException;
-import com.kezisoft.nyounda.domain.homeservice.CategoryId;
+import com.kezisoft.nyounda.domain.categories.CategoryId;
 import com.kezisoft.nyounda.domain.homeservice.HomeService;
 import com.kezisoft.nyounda.domain.homeservice.HomeServiceId;
-import com.kezisoft.nyounda.domain.homeservice.ProviderId;
+import com.kezisoft.nyounda.domain.provider.ProviderId;
 import com.kezisoft.nyounda.persistence.homeservice.entity.HomeServiceEntity;
 import com.kezisoft.nyounda.persistence.homeservice.jpa.JpaHomeServiceRepository;
 import lombok.RequiredArgsConstructor;

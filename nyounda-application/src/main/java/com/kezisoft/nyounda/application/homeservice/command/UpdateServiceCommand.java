@@ -1,7 +1,7 @@
 package com.kezisoft.nyounda.application.homeservice.command;
 
 
-import com.kezisoft.nyounda.domain.homeservice.CategoryId;
+import com.kezisoft.nyounda.domain.categories.CategoryId;
 import com.kezisoft.nyounda.domain.homeservice.HomeServiceId;
 import com.kezisoft.nyounda.domain.homeservice.PricingType;
 

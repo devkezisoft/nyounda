@@ -1,7 +1,7 @@
 package com.kezisoft.nyounda.application.categories.port.out;
 
-import com.kezisoft.nyounda.domain.homeservice.Category;
-import com.kezisoft.nyounda.domain.homeservice.CategoryId;
+import com.kezisoft.nyounda.domain.categories.Category;
+import com.kezisoft.nyounda.domain.categories.CategoryId;
 
 import java.util.List;
 import java.util.Optional;
