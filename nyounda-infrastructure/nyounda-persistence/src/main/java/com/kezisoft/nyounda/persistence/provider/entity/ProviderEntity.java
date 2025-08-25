@@ -52,4 +52,17 @@ public class ProviderEntity {
                 skills
         );
     }
+
+    public static ProviderEntity fromDomain(Provider provider, UserEntity user) {
+        return ProviderEntity.builder()
+                .id(provider.id().value())
+                .averageRating(provider.averageRating())
+                .numberOfReviews(provider.numberOfReviews())
+                .location(provider.location())
+                .yearsExperience(provider.yearsExperience())
+                .jobsDone(provider.jobsDone())
+                .responseTime(provider.responseTime())
+                .user(user)
+                .build();
+    }
 }

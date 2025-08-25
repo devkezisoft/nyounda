@@ -10,4 +10,6 @@ public interface ProviderRepository {
     Optional<Provider> findById(ProviderId providerId);
 
     Optional<Provider> findByUserId(UUID userId);
+
+    Provider save(UUID userId, Provider provider);
 }

@@ -1,12 +1,16 @@
 package com.kezisoft.nyounda.persistence.provider;
 
 import com.kezisoft.nyounda.application.provider.port.out.ProviderRepository;
+import com.kezisoft.nyounda.application.shared.exception.AccountNotFoundException;
 import com.kezisoft.nyounda.domain.provider.Provider;
 import com.kezisoft.nyounda.domain.provider.ProviderId;
 import com.kezisoft.nyounda.domain.provider.ProviderSkill;
+import com.kezisoft.nyounda.persistence.provider.entity.ProviderEntity;
 import com.kezisoft.nyounda.persistence.provider.entity.ProviderSkillEntity;
 import com.kezisoft.nyounda.persistence.provider.jpa.JpaProviderRepository;
 import com.kezisoft.nyounda.persistence.provider.jpa.JpaProviderSkillRepository;
+import com.kezisoft.nyounda.persistence.user.entity.UserEntity;
+import com.kezisoft.nyounda.persistence.user.jpa.JpaUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -21,6 +25,7 @@ import java.util.UUID;
 public class ProviderRepositoryAdapter implements ProviderRepository {
 
     private final JpaProviderRepository jpaProviderRepository;
+    private final JpaUserRepository jpaUserRepository;
     private final JpaProviderSkillRepository jpaProviderSkillRepository;
 
     @Override
@@ -45,5 +50,20 @@ public class ProviderRepositoryAdapter implements ProviderRepository {
                     log.debug("Found provider: {} with skills: {}", entity, skills);
                     return entity.toDomain(skills);
                 });
+    }
+
+    @Override
+    public Provider save(UUID userId, Provider provider) {
+        UserEntity user = jpaUserRepository.findById(userId)
+                .orElseThrow(AccountNotFoundException::new);
+        ProviderEntity entity = ProviderEntity.fromDomain(provider, user);
+        Provider domain = jpaProviderRepository.save(entity).toDomain(List.of());
+        List<ProviderSkillEntity> skillEntities = provider.skills().stream()
+                .map(skill -> ProviderSkillEntity.fromDomain(skill, domain.id().value()))
+                .toList();
+        List<ProviderSkillEntity> providerSkillEntities = jpaProviderSkillRepository.saveAll(skillEntities);
+        return domain.withSkills(providerSkillEntities.stream()
+                .map(ProviderSkillEntity::toDomain)
+                .toList());
     }
 }
