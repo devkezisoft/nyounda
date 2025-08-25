@@ -1,7 +1,6 @@
 package com.kezisoft.nyounda.api.provider.view;
 
 import com.kezisoft.nyounda.domain.provider.Provider;
-import com.kezisoft.nyounda.domain.provider.ProviderSkill;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,7 +15,7 @@ public record ProviderView(
         int yearsExperience,
         int jobsDone,
         String responseTime, // Example: "< 2 hours"
-        List<ProviderSkill> skills
+        List<ProviderSkillView> skills
 ) {
     public static ProviderView fromDomain(Provider provider) {
         return new ProviderView(
@@ -29,7 +28,9 @@ public record ProviderView(
                 provider.yearsExperience(),
                 provider.jobsDone(),
                 provider.responseTime(),
-                provider.skills()
+                provider.skills().stream()
+                        .map(ProviderSkillView::fromDomain)
+                        .toList()
         );
     }
 }
