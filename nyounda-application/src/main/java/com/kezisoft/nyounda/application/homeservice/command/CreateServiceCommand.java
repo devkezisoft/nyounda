@@ -1,8 +1,8 @@
 package com.kezisoft.nyounda.application.homeservice.command;
 
 import com.kezisoft.nyounda.domain.categories.Category;
-import com.kezisoft.nyounda.domain.homeservice.*;
 import com.kezisoft.nyounda.domain.provider.Provider;
+import com.kezisoft.nyounda.domain.servicerequest.*;
 
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
@@ -22,9 +22,9 @@ public record CreateServiceCommand(
         List<UUID> imageIds
 ) {
 
-    public static HomeService toDomain(CreateServiceCommand command, Provider provider, Category category, List<Tag> tags, List<ServiceImage> images) {
-        return new HomeService(
-                HomeServiceId.valueOf(UUID.randomUUID()), // generate a new ID when creating
+    public static ServiceRequest toDomain(CreateServiceCommand command, Provider provider, Category category, List<Tag> tags, List<Image> images) {
+        return new ServiceRequest(
+                ServiceRequestId.valueOf(UUID.randomUUID()), // generate a new ID when creating
                 command.title(),
                 command.description(),
                 command.pricingType(),

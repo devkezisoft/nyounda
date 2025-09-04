@@ -1,18 +1,18 @@
 package com.kezisoft.nyounda.application.homeservice.port.out;
 
-import com.kezisoft.nyounda.domain.homeservice.HomeService;
-import com.kezisoft.nyounda.domain.homeservice.HomeServiceId;
+import com.kezisoft.nyounda.domain.servicerequest.ServiceRequest;
+import com.kezisoft.nyounda.domain.servicerequest.ServiceRequestId;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface HomeServiceRepository {
 
-    HomeServiceId save(HomeService service);
+    ServiceRequestId save(ServiceRequest service);
 
-    void deleteById(HomeServiceId id);
+    void deleteById(ServiceRequestId id);
 
-    Optional<HomeService> findById(HomeServiceId id);
+    Optional<ServiceRequest> findById(ServiceRequestId id);
 
-    List<HomeService> findAll();
+    List<ServiceRequest> findAll();
 }

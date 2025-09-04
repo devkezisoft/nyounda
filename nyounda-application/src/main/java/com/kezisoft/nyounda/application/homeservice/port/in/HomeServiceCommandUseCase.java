@@ -2,12 +2,12 @@ package com.kezisoft.nyounda.application.homeservice.port.in;
 
 import com.kezisoft.nyounda.application.homeservice.command.CreateServiceCommand;
 import com.kezisoft.nyounda.application.homeservice.command.UpdateServiceCommand;
-import com.kezisoft.nyounda.domain.homeservice.HomeServiceId;
+import com.kezisoft.nyounda.domain.servicerequest.ServiceRequestId;
 
 public interface HomeServiceCommandUseCase {
-    HomeServiceId create(CreateServiceCommand command);
+    ServiceRequestId create(CreateServiceCommand command);
 
-    void update(HomeServiceId homeServiceId, UpdateServiceCommand command);
+    void update(ServiceRequestId serviceRequestId, UpdateServiceCommand command);
 
-    void delete(HomeServiceId homeServiceId);
+    void delete(ServiceRequestId serviceRequestId);
 }

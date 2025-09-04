@@ -152,4 +152,71 @@
             <column name="parent_id" type="uuid"/>
         </loadData>
     </changeSet>
+
+    <changeSet id="09-service-request" author="nyounda">
+        <createTable tableName="service_request">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="user_id" type="UUID">
+                <constraints nullable="false" foreignKeyName="fk_sr_user"
+                             referencedTableName="users" referencedColumnNames="id"/>
+            </column>
+
+            <column name="category_id" type="UUID">
+                <constraints nullable="false" foreignKeyName="fk_sr_category"
+                             referencedTableName="category" referencedColumnNames="id"/>
+            </column>
+
+            <column name="subcategory_id" type="UUID">
+                <constraints nullable="false" foreignKeyName="fk_sr_subcategory"
+                             referencedTableName="category" referencedColumnNames="id"/>
+            </column>
+
+            <column name="title" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="description" type="text"/>
+            <column name="address" type="varchar(500)"/>
+
+            <column name="status" type="varchar(40)" defaultValue="PENDING">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_at" type="timestamptz" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+    </changeSet>
+    <changeSet id="10-image" author="nyounda">
+        <createTable tableName="image">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="storage_key" type="text">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="url" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="mime_type" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="size_bytes" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamptz" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="image" indexName="idx_image_storage_key">
+            <column name="storage_key"/>
+        </createIndex>
+    </changeSet>
+
+
 </databaseChangeLog>
