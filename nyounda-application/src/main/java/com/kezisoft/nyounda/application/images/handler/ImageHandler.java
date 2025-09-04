@@ -44,7 +44,7 @@ public class ImageHandler implements ImageUseCase {
             String ext = detected.equals("image/png") ? ".png" : ".jpg";
             // Key pattern: uploads/YYYY/MM/<uuid><ext>
             var today = LocalDate.now();
-            String key = "uploads/%d/%02d/%s%s".formatted(
+            String key = "%d/%02d/%s%s".formatted(
                     today.getYear(), today.getMonthValue(), UUID.randomUUID(), ext
             );
 

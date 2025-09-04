@@ -19,9 +19,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class LocalFsImageStorage implements ImageStorage {
 
-    @Value("${storage.local.base-dir:/var/nyounda/uploads}")
+    @Value("${storage.local.base-dir:/Users/gtemate/nyounda/uploads}")
     private String baseDir;                 // e.g. /var/nyounda/uploads
-    @Value("${storage.local.public-base-url:http://localhost:8080/}")
+    @Value("${storage.local.public-base-url:http://localhost:8080/uploads/}")
     private String publicBaseUrl;// e.g. http://localhost:8080/
 
     private final Tika tika = new Tika();

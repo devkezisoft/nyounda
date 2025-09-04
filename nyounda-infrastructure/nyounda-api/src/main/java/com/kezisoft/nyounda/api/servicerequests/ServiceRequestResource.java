@@ -31,7 +31,7 @@ public class ServiceRequestResource {
         var serviceRequest = serviceRequestUseCase.create(req.toCommand(currentUserId));
         var view = ServiceRequestView.from(serviceRequest);
         return ResponseEntity
-                .created(URI.create("/api/requests/" + serviceRequest.id()))
+                .created(URI.create("/api/requests/" + serviceRequest.id().value()))
                 .body(view);
     }
 

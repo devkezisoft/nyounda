@@ -88,18 +88,6 @@
         </createIndex>
     </changeSet>
 
-    <changeSet id="005-service-image" author="nyounda">
-        <createTable tableName="service_image">
-            <column name="id" type="uuid">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="url" type="varchar(512)"/>
-            <column name="status" type="varchar(20)"/>
-            <column name="created_at" type="timestamptz" defaultValueComputed="now()"/>
-        </createTable>
-        <addDefaultValue tableName="service_image" columnName="id" defaultValueComputed="gen_random_uuid()"/>
-    </changeSet>
-
     <changeSet id="006-review" author="nyounda">
         <createTable tableName="review">
             <column name="id" type="uuid">
@@ -219,6 +207,30 @@
         <createIndex tableName="image" indexName="idx_image_storage_key">
             <column name="storage_key"/>
         </createIndex>
+    </changeSet>
+
+    <changeSet id="create-request-image-join" author="kezisoft">
+        <createTable tableName="request_image">
+            <column name="request_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="image_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="request_image" columnNames="request_id,image_id" constraintName="pk_request_image"/>
+        <addForeignKeyConstraint baseTableName="request_image"
+                                 baseColumnNames="request_id"
+                                 constraintName="fk_request_image_request"
+                                 referencedTableName="service_request"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+        <addForeignKeyConstraint baseTableName="request_image"
+                                 baseColumnNames="image_id"
+                                 constraintName="fk_request_image_image"
+                                 referencedTableName="image"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
     </changeSet>
 
 

@@ -6,3 +6,7 @@ spring:
     import: "classpath:application-persistence.yml"
   application:
     name: Nyounda-api
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
