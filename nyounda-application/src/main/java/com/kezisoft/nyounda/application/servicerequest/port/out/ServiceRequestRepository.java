@@ -1,18 +1,19 @@
-package com.kezisoft.nyounda.application.homeservice.port.out;
+package com.kezisoft.nyounda.application.servicerequest.port.out;
 
 import com.kezisoft.nyounda.domain.servicerequest.ServiceRequest;
 import com.kezisoft.nyounda.domain.servicerequest.ServiceRequestId;
+import com.kezisoft.nyounda.domain.user.User;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface HomeServiceRepository {
+public interface ServiceRequestRepository {
 
-    ServiceRequestId save(ServiceRequest service);
+    ServiceRequest save(ServiceRequest service);
 
     void deleteById(ServiceRequestId id);
 
     Optional<ServiceRequest> findById(ServiceRequestId id);
 
-    List<ServiceRequest> findAll();
+    List<ServiceRequest> findAllByUser(User user);
 }

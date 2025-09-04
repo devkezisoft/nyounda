@@ -1,4 +1,4 @@
-package com.kezisoft.nyounda.application.homeservice.port.out;
+package com.kezisoft.nyounda.application.servicerequest.port.out;
 
 import com.kezisoft.nyounda.domain.servicerequest.Tag;
 

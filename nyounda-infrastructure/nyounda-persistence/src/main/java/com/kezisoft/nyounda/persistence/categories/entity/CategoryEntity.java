@@ -40,6 +40,18 @@ public class CategoryEntity {
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CategoryEntity> subcategories = new ArrayList<>();
 
+    public static CategoryEntity fromDomain(Category category) {
+        return CategoryEntity.builder()
+                .id(category.id().value())
+                .name(category.name())
+                .description(category.description())
+                .emoji(category.emoji())
+                .subcategories(category.subcategories().stream()
+                        .map(CategoryEntity::fromDomain)
+                        .toList())
+                .build();
+    }
+
 
     public Category toDomain() {
         return new Category(

@@ -161,7 +161,7 @@
 
             <column name="user_id" type="UUID">
                 <constraints nullable="false" foreignKeyName="fk_sr_user"
-                             referencedTableName="users" referencedColumnNames="id"/>
+                             referencedTableName="app_user" referencedColumnNames="id"/>
             </column>
 
             <column name="category_id" type="UUID">
@@ -186,6 +186,9 @@
             </column>
 
             <column name="created_at" type="timestamptz" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamptz" defaultValueComputed="now()">
                 <constraints nullable="false"/>
             </column>
         </createTable>

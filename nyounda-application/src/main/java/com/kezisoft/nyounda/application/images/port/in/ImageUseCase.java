@@ -11,4 +11,8 @@ public interface ImageUseCase {
     List<Image> upload(List<ImageCreateCommand> files) throws Exception;
 
     void delete(UUID id);
+
+    void delete(List<UUID> ids);
+
+    List<Image> findAllImages(List<UUID> imageIds);
 }

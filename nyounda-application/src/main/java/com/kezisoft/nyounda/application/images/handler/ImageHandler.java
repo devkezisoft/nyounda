@@ -61,4 +61,16 @@ public class ImageHandler implements ImageUseCase {
         repo.delete(img);
         storage.delete(key);
     }
+
+    @Override
+    public void delete(List<UUID> ids) {
+        var images = repo.findAllImages(ids);
+        images.forEach(img -> storage.delete(img.storageKey()));
+        images.forEach(repo::delete);
+    }
+
+    @Override
+    public List<Image> findAllImages(List<UUID> imageIds) {
+        return repo.findAllImages(imageIds);
+    }
 }

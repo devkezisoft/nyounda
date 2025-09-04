@@ -6,4 +6,8 @@ public record ServiceRequestId(UUID value) {
     public static ServiceRequestId valueOf(UUID value) {
         return new ServiceRequestId(value);
     }
+
+    public static ServiceRequestId generate() {
+        return ServiceRequestId.valueOf(UUID.randomUUID());
+    }
 }

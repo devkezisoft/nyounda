@@ -1,6 +1,6 @@
 package com.kezisoft.nyounda.persistence.servicerequest;
 
-import com.kezisoft.nyounda.application.homeservice.port.out.ReviewRepository;
+import com.kezisoft.nyounda.application.servicerequest.port.out.ReviewRepository;
 import com.kezisoft.nyounda.domain.servicerequest.Review;
 import com.kezisoft.nyounda.persistence.servicerequest.entity.ReviewEntity;
 import com.kezisoft.nyounda.persistence.servicerequest.jpa.JpaReviewRepository;

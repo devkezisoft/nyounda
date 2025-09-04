@@ -1,6 +1,6 @@
 package com.kezisoft.nyounda.persistence.servicerequest;
 
-import com.kezisoft.nyounda.application.homeservice.port.out.TagRepository;
+import com.kezisoft.nyounda.application.servicerequest.port.out.TagRepository;
 import com.kezisoft.nyounda.domain.servicerequest.Tag;
 import com.kezisoft.nyounda.persistence.servicerequest.entity.TagEntity;
 import com.kezisoft.nyounda.persistence.servicerequest.jpa.JpaTagRepository;

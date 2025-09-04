@@ -4,6 +4,7 @@ import com.kezisoft.nyounda.api.categories.response.CategoryView;
 import com.kezisoft.nyounda.api.errors.BadRequestAlertException;
 import com.kezisoft.nyounda.application.categories.port.in.CategoriesUseCase;
 import com.kezisoft.nyounda.domain.categories.Category;
+import com.kezisoft.nyounda.domain.categories.CategoryId;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +51,7 @@ public class CategoriesResource {
     @GetMapping("/{id}")
     public ResponseEntity<CategoryView> category(@PathVariable UUID id) throws BadRequestAlertException {
         log.debug("Fetching category with id: {}", id);
-        Category category = categoriesUseCase.getCategoryById(id)
+        Category category = categoriesUseCase.getCategoryById(CategoryId.valueOf(id))
                 .orElseThrow(() -> new BadRequestAlertException("Category not found", "nyounda-api", "categorynotfound"));
         return ResponseEntity.ok(CategoryView.fromDomain(category));
     }

@@ -12,6 +12,7 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 
 import java.io.InputStream;
+import java.util.UUID;
 
 @Service
 @Profile("prod")
@@ -29,7 +30,14 @@ public class S3ImageStorage implements ImageStorage {
     public Image store(String key, InputStream in, String contentType, long size) {
         s3.putObject(b -> b.bucket(bucket).key(key).contentType(contentType),
                 RequestBody.fromInputStream(in, size));
-        return new Stored(key, publicBaseUrl + key);
+        return
+                new Image(
+                        UUID.randomUUID(),
+                        publicBaseUrl + key,
+                        key,
+                        contentType,
+                        size
+                );
     }
 
     @Override
