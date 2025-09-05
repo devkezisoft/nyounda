@@ -2,6 +2,7 @@ package com.kezisoft.nyounda.api.account;
 
 
 import com.kezisoft.nyounda.api.account.request.AccountCreateRequest;
+import com.kezisoft.nyounda.api.account.request.AccountUpdateRequest;
 import com.kezisoft.nyounda.api.account.view.AccountView;
 import com.kezisoft.nyounda.api.security.SecurityUtils;
 import com.kezisoft.nyounda.application.shared.exception.AccountNotFoundException;
@@ -62,6 +63,24 @@ public class AccountResource {
                                 "account", accountView.id().toString())
                 )
                 .body(accountView);
+    }
+
+    /**
+     * {@code PATCH  /account} : update user.
+     *
+     * @param request the user to update.
+     * @return the ResponseEntity with status {@code 201 (Created)} and with body the new user, or with status {@code 400 (Bad Request)} if the user has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PatchMapping("/accounts")
+    public AccountView updateAccount(@RequestBody AccountUpdateRequest request) throws URISyntaxException {
+        log.debug("Updating user account: {}", request);
+        UUID currentUserId = SecurityUtils.getCurrentUserLogin()
+                .map(UUID::fromString)
+                .orElseThrow(AccountNotFoundException::new);
+        User user = userUseCase.updateUser(currentUserId, request.toCommand())
+                .orElseThrow(AccountNotFoundException::new);
+        return AccountView.fromDomain(user);
     }
 
 }

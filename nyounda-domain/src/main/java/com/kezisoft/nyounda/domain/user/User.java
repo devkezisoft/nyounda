@@ -1,8 +1,11 @@
 package com.kezisoft.nyounda.domain.user;
 
+import lombok.With;
+
 import java.util.List;
 import java.util.UUID;
 
+@With
 public record User(
         UUID id,
         String fullName,
