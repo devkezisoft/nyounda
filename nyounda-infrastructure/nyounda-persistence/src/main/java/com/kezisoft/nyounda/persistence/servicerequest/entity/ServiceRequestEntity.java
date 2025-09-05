@@ -60,7 +60,7 @@ public class ServiceRequestEntity {
             joinColumns = @JoinColumn(name = "request_id"),
             inverseJoinColumns = @JoinColumn(name = "image_id")
     )
-    private List<ImageEntity> photos = new ArrayList<>();
+    private List<ImageEntity> images = new ArrayList<>();
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -80,7 +80,7 @@ public class ServiceRequestEntity {
                 .description(service.description())
                 .address(service.address())
                 .status(service.status())
-                .photos(service.images() != null ? service.images().stream()
+                .images(service.images() != null ? service.images().stream()
                         .map(ImageEntity::fromDomain)
                         .toList() : null)
                 .build();
@@ -90,7 +90,7 @@ public class ServiceRequestEntity {
         ImageEntity p = new ImageEntity();
         p.setId(UUID.randomUUID());
         p.setUrl(url);
-        photos.add(p);
+        images.add(p);
     }
 
     public ServiceRequest toDomain() {
@@ -99,7 +99,7 @@ public class ServiceRequestEntity {
                 this.status,
                 this.title,
                 this.description,
-                this.photos != null ? this.photos.stream()
+                this.images != null ? this.images.stream()
                         .map(ImageEntity::toDomain)
                         .toList() : null,
                 this.category.toDomain(),
