@@ -42,7 +42,7 @@
             <column name="avatar_url" type="varchar(255)"/>
             <column name="average_rating" type="numeric(2,1)"/>
             <column name="number_of_reviews" type="int"/>
-            <column name="address" type="varchar(500)"/>
+            <column name="location" type="varchar(500)"/>
             <column name="years_experience" type="int"/>
             <column name="jobs_done" type="int"/>
             <column name="response_time" type="varchar(255)"/>
