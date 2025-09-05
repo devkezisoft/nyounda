@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.UUID;
 
 public record ProviderCreateCommand(
-        List<ProviderSkillCreateCommand> skills
+        List<ProviderSkillCreateCommand> skills,
+        String location
 ) {
     public Provider toDomain(List<ProviderSkill> skills) {
         return new Provider(
@@ -17,7 +18,7 @@ public record ProviderCreateCommand(
                 null,
                 0.0,
                 0,
-                null,
+                location,
                 0,
                 0,
                 null,

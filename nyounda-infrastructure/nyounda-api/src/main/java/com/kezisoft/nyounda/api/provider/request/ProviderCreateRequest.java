@@ -5,13 +5,15 @@ import com.kezisoft.nyounda.application.provider.command.ProviderCreateCommand;
 import java.util.List;
 
 public record ProviderCreateRequest(
-        List<ProviderSkillCreateRequest> skills
+        List<ProviderSkillCreateRequest> skills,
+        String location
 ) {
     public ProviderCreateCommand toCommand() {
         return new ProviderCreateCommand(
                 skills.stream()
                         .map(ProviderSkillCreateRequest::toCommand)
-                        .toList()
+                        .toList(),
+                location
         );
     }
 }
