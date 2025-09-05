@@ -34,7 +34,8 @@ public record ServiceRequestCreateCommand(
                 category,
                 subCategory,
                 user,
-                command.addressText
+                command.addressText,
+                null
         );
 
     }

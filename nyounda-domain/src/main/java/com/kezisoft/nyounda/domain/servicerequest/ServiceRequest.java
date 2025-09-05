@@ -4,6 +4,7 @@ import com.kezisoft.nyounda.domain.categories.Category;
 import com.kezisoft.nyounda.domain.user.User;
 import lombok.With;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @With
@@ -16,6 +17,7 @@ public record ServiceRequest(
         Category category,
         Category subcategory,
         User user,
-        String address
+        String address,
+        LocalDateTime createdAt
 ) {
 }
