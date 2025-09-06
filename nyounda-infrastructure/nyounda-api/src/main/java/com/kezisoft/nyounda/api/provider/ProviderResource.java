@@ -1,11 +1,13 @@
 package com.kezisoft.nyounda.api.provider;
 
 import com.kezisoft.nyounda.api.provider.request.ProviderCreateRequest;
+import com.kezisoft.nyounda.api.provider.request.ProviderUpdateRequest;
 import com.kezisoft.nyounda.api.provider.view.ProviderView;
 import com.kezisoft.nyounda.api.security.SecurityUtils;
 import com.kezisoft.nyounda.application.provider.port.in.ProviderUseCase;
 import com.kezisoft.nyounda.application.shared.exception.ProviderNotFoundException;
 import com.kezisoft.nyounda.domain.provider.Provider;
+import com.kezisoft.nyounda.domain.provider.ProviderId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -66,6 +68,22 @@ public class ProviderResource {
                 .orElseThrow(ProviderNotFoundException::new);
 
 
+    }
+
+    /**
+     * {@code PATCH  /providers} : register provider.
+     *
+     * @return the current provider.
+     */
+    @PatchMapping("{id}")
+    public ProviderView updateProvider(@PathVariable UUID id, @RequestBody ProviderUpdateRequest request) {
+        log.debug("Updating provider for current user");
+        UUID currentUserId = SecurityUtils.getCurrentUserLogin()
+                .map(UUID::fromString)
+                .orElseThrow(ProviderNotFoundException::new);
+        Provider provider = providerUseCase.update(currentUserId, ProviderId.valueOf(id), request.toCommand())
+                .orElseThrow(ProviderNotFoundException::new);
+        return ProviderView.fromDomain(provider);
     }
 
 }

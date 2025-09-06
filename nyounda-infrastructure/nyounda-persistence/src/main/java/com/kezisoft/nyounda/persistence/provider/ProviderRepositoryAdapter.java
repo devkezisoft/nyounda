@@ -14,6 +14,7 @@ import com.kezisoft.nyounda.persistence.user.jpa.JpaUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -53,6 +54,7 @@ public class ProviderRepositoryAdapter implements ProviderRepository {
     }
 
     @Override
+    @Transactional
     public Provider save(UUID userId, Provider provider) {
         UserEntity user = jpaUserRepository.findById(userId)
                 .orElseThrow(AccountNotFoundException::new);
@@ -65,5 +67,11 @@ public class ProviderRepositoryAdapter implements ProviderRepository {
         return domain.withSkills(providerSkillEntities.stream()
                 .map(ProviderSkillEntity::toDomain)
                 .toList());
+    }
+
+    @Override
+    @Transactional
+    public void deleteAllProviderSkills(List<UUID> skillIds) {
+        jpaProviderSkillRepository.deleteAllById(skillIds);
     }
 }
