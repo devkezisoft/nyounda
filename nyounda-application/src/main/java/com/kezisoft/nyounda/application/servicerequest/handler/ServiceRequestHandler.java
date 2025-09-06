@@ -52,6 +52,7 @@ public class ServiceRequestHandler implements ServiceRequestUseCase {
     @Override
     @Transactional
     public Optional<ServiceRequest> update(ServiceRequestId id, UpdateServiceCommand command) {
+        log.debug("Updating service request id: {} with command: {}", id, command);
         return serviceRequestRepository.findById(id).map(exist -> {
 
             if (command.title() != null) {
@@ -101,6 +102,7 @@ public class ServiceRequestHandler implements ServiceRequestUseCase {
 
     @Override
     public void delete(ServiceRequestId id) {
+        log.debug("Deleting service request id: {}", id);
         var exist = serviceRequestRepository.findById(id)
                 .orElseThrow(ServiceRequestNotFoundException::new);
 
@@ -115,12 +117,14 @@ public class ServiceRequestHandler implements ServiceRequestUseCase {
 
     @Override
     public List<ServiceRequest> findAllByUserId(UUID userId) {
+        log.debug("Fetching all service requests for user id: {}", userId);
         var user = userUseCase.getById(userId).orElseThrow(AccountNotFoundException::new);
         return serviceRequestRepository.findAllByUser(user);
     }
 
     @Override
     public Optional<ServiceRequest> findById(ServiceRequestId id) {
+        log.debug("Fetching service request by id: {}", id);
         return serviceRequestRepository.findById(id);
     }
 }
