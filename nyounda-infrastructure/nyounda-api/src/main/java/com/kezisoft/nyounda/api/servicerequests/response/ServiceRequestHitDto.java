@@ -12,7 +12,7 @@ public record ServiceRequestHitDto(
         String emoji,
         String title,
         String city,
-        Integer distanceKm,
+        double distanceKm,
         boolean viewed,
         LocalDateTime postedAt
 ) {
@@ -23,8 +23,8 @@ public record ServiceRequestHitDto(
                 serviceRequest.category().emoji(),
                 serviceRequest.title(),
                 serviceRequest.address(),
-                20,
-                RandomUtils.secure().randomBoolean(),
+                RandomUtils.nextDouble(10.0, 1000.0), //TODO calculate real distance
+                RandomUtils.secure().randomBoolean(), //TODO track viewed status
                 serviceRequest.createdAt()
         );
     }
