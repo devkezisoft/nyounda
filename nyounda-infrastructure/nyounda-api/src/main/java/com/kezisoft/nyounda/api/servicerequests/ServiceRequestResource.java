@@ -10,13 +10,16 @@ import com.kezisoft.nyounda.application.shared.exception.ServiceRequestNotFoundE
 import com.kezisoft.nyounda.domain.servicerequest.ServiceRequestId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.UUID;
 
 @RestController
+@PreAuthorize("hasRole('CLIENT')")
 @RequestMapping("/api/requests")
 @RequiredArgsConstructor
 public class ServiceRequestResource {
@@ -64,8 +67,11 @@ public class ServiceRequestResource {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        serviceRequestUseCase.delete(ServiceRequestId.valueOf(id));
+    public ResponseEntity<Void> delete(@PathVariable UUID id) throws AccessDeniedException {
+        UUID currentUserId = SecurityUtils.getCurrentUserLogin()
+                .map(UUID::fromString)
+                .orElseThrow(AccountNotFoundException::new);
+        serviceRequestUseCase.delete(currentUserId, ServiceRequestId.valueOf(id));
         return ResponseEntity.noContent().build();
     }
 }

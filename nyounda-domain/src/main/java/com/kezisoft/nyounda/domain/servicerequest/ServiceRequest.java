@@ -6,6 +6,7 @@ import lombok.With;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @With
 public record ServiceRequest(
@@ -20,4 +21,16 @@ public record ServiceRequest(
         String address,
         LocalDateTime createdAt
 ) {
+
+    public List<UUID> imageIds() {
+        return images.stream().map(Image::id).toList();
+    }
+
+    public boolean isOwnedBy(UUID userId) {
+        return user.id().equals(userId);
+    }
+
+    public boolean isNotOwnedBy(UUID userId) {
+        return !isOwnedBy(userId);
+    }
 }

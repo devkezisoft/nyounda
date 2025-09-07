@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.file.AccessDeniedException;
 import java.util.*;
 
 @Slf4j
@@ -101,14 +102,18 @@ public class ServiceRequestHandler implements ServiceRequestUseCase {
     }
 
     @Override
-    public void delete(ServiceRequestId id) {
-        log.debug("Deleting service request id: {}", id);
+    public void delete(UUID currentUserId, ServiceRequestId id) throws AccessDeniedException {
+        log.debug("Deleting service request id: {} by user id: {}", id, currentUserId);
         var exist = serviceRequestRepository.findById(id)
                 .orElseThrow(ServiceRequestNotFoundException::new);
 
+        if (exist.isNotOwnedBy(currentUserId)) {
+            throw new AccessDeniedException("You are not allowed to delete this request.");
+        }
+
         // collect attached images first
-        var imgIds = exist.images().stream().map(Image::id).toList();
-        
+        var imgIds = exist.imageIds();
+
         serviceRequestRepository.deleteById(id);
         // remove physical blobs + image rows after commit
         imageUseCase.delete(imgIds);
