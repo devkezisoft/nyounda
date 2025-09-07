@@ -12,7 +12,7 @@ public record ProviderSkillCreateCommand(
 ) {
     public ProviderSkill toDomain(Category category) {
         return new ProviderSkill(
-                null,
+                UUID.randomUUID(),
                 category,
                 description,
                 0 // Default experience years, can be modified as needed

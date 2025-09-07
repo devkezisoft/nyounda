@@ -59,10 +59,9 @@ public class CategoryEntity {
                 this.name,
                 this.description,
                 this.emoji,
-                this.subcategories.stream()
+                this.subcategories == null ? List.of() : this.subcategories.stream()
                         .map(CategoryEntity::toDomain)
                         .toList()
-
         );
     }
 

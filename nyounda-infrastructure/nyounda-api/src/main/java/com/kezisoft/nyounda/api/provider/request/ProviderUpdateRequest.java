@@ -1,18 +1,21 @@
 package com.kezisoft.nyounda.api.provider.request;
 
 import com.kezisoft.nyounda.application.provider.command.ProviderUpdateCommand;
+import jakarta.annotation.Nullable;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.List;
 
 public record ProviderUpdateRequest(
-        List<ProviderSkillUpdateRequest> skills,
+        @Nullable List<ProviderSkillUpdateRequest> skills,
         String location
 ) {
     public ProviderUpdateCommand toCommand() {
         return new ProviderUpdateCommand(
-                skills.stream()
-                        .map(ProviderSkillUpdateRequest::toCommand)
-                        .toList(),
+                CollectionUtils.isEmpty(skills) ? List.of() :
+                        skills.stream()
+                                .map(ProviderSkillUpdateRequest::toCommand)
+                                .toList(),
                 location
         );
     }

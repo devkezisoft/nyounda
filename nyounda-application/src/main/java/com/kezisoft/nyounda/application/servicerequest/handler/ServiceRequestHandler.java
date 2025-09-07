@@ -108,8 +108,7 @@ public class ServiceRequestHandler implements ServiceRequestUseCase {
 
         // collect attached images first
         var imgIds = exist.images().stream().map(Image::id).toList();
-        // detach in JPA side
-        exist.images().clear();
+        
         serviceRequestRepository.deleteById(id);
         // remove physical blobs + image rows after commit
         imageUseCase.delete(imgIds);

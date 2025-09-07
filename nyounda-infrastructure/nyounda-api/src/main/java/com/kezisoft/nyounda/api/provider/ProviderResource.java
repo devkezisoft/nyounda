@@ -11,6 +11,7 @@ import com.kezisoft.nyounda.domain.provider.ProviderId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
 
@@ -20,6 +21,7 @@ import java.util.UUID;
 
 @Slf4j
 @RestController
+@PreAuthorize("hasRole('PROVIDER')")
 @RequestMapping("/api/providers")
 @RequiredArgsConstructor
 public class ProviderResource {
@@ -54,7 +56,7 @@ public class ProviderResource {
                     ProviderView providerView = ProviderView.fromDomain(provider);
                     log.debug("Created provider: {}", provider);
                     try {
-                        return ResponseEntity.created(new URI("/api/providers/" + provider.id()))
+                        return ResponseEntity.created(new URI("/api/providers/" + provider.id().value()))
                                 .headers(HeaderUtil
                                         .createEntityCreationAlert(
                                                 "nyounda-api", true,

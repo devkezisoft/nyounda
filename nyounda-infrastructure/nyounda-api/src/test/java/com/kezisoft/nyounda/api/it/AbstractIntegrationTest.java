@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kezisoft.nyounda.application.auth.port.out.PinCodeProvider;
 import com.kezisoft.nyounda.domain.user.User;
 import com.kezisoft.nyounda.domain.user.UserRole;
+import com.kezisoft.nyounda.persistence.categories.entity.CategoryEntity;
 import com.kezisoft.nyounda.persistence.user.entity.UserEntity;
 import jakarta.persistence.EntityManager;
-import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +15,6 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
@@ -28,26 +27,23 @@ public abstract class AbstractIntegrationTest {
     @Autowired
     protected MockMvc mockMvc;
     @Autowired
-    private EntityManager em;
+    protected EntityManager em;
     @Autowired
     protected ObjectMapper objectMapper;
 
     @MockitoBean
     PinCodeProvider pinCodeProvider;
 
-    @Container
-    private static final PostgreSQLContainer<?> POSTGRES =
-            new PostgreSQLContainer<>("postgres:16-alpine")
-                    .withDatabaseName("nyounda")
-                    .withUsername("nyounda")
-                    .withPassword("nyounda");
+    //✅ JVM-wide singleton container (no @BeforeAll, no @Testcontainers needed)
+    private static final PostgreSQLContainer<?> POSTGRES;
 
-    @BeforeAll
-    static void startContainer() {
-        // Ensure container is running BEFORE DynamicPropertySource suppliers are evaluated
-        if (!POSTGRES.isRunning()) {
-            POSTGRES.start();
-        }
+    static {
+        POSTGRES = new PostgreSQLContainer<>("postgres:16-alpine")
+                .withDatabaseName("nyounda")
+                .withUsername("nyounda")
+                .withPassword("nyounda")
+                .withReuse(true); // optional; see note below
+        POSTGRES.start();
     }
 
     @DynamicPropertySource
@@ -65,6 +61,24 @@ public abstract class AbstractIntegrationTest {
         em.persist(user);
         em.flush();
         return user.toDomain();
+    }
+
+    /**
+     * Returns [rootId, subId] with sub.parent = root
+     */
+    protected UUID[] seedCategoryHierarchy(String rootName, String subName) {
+        CategoryEntity root = CategoryEntity.builder()
+                .name(rootName).emoji("🧰").description("Root " + rootName)
+                .build();
+        em.persist(root);
+
+        CategoryEntity sub = CategoryEntity.builder()
+                .name(subName).emoji("🔩").description("Sub " + subName).parent(root)
+                .build();
+        em.persist(sub);
+
+        em.flush();
+        return new UUID[]{root.getId(), sub.getId()};
     }
 
     protected User seedUserClient(String fullName, String email, String phone) {

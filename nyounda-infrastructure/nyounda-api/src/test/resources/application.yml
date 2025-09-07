@@ -15,3 +15,7 @@ spring:
 jwt:
   secret: kkzGJbQJb3Nf4UwHeA6AXEx3KnYtsS9fJExBHp+u1fwWuY1Yh03JZ+YzMyGJH2b6KKxLaKU9H1qTsFV4pyzQbQ==
   token-validity-in-seconds: 86400
+storage:
+  local:
+    public-base-url: http://localhost:8080/uploads/
+    base-dir: /tmp/uploads
