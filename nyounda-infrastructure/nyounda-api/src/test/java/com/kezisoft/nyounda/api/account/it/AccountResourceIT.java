@@ -1,25 +1,17 @@
 package com.kezisoft.nyounda.api.account.it;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kezisoft.nyounda.api.account.request.AccountCreateRequest;
 import com.kezisoft.nyounda.api.account.request.AccountUpdateRequest;
 import com.kezisoft.nyounda.api.account.view.AccountView;
 import com.kezisoft.nyounda.api.it.AbstractIntegrationTest;
 import com.kezisoft.nyounda.domain.user.RegistrationType;
-import com.kezisoft.nyounda.domain.user.UserRole;
-import com.kezisoft.nyounda.persistence.user.entity.UserEntity;
-import jakarta.persistence.EntityManager;
+import com.kezisoft.nyounda.domain.user.User;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.UUID;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -28,22 +20,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DirtiesContext
 @Transactional
 public class AccountResourceIT extends AbstractIntegrationTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private EntityManager em;
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    private UserEntity insertUser(UUID id, String fullName, String email, String phone, List<String> roles) {
-        var user = UserEntity.builder()
-                .id(id).fullName(fullName).email(email).phone(phone)
-                .avatarUrl(null).roles(roles).build();
-        em.persist(user);
-        em.flush();
-        return user;
-    }
 
     @Test
     @SneakyThrows
@@ -81,8 +57,7 @@ public class AccountResourceIT extends AbstractIntegrationTest {
     @Test
     @DisplayName("PATCH /api/accounts -> updates current user and returns updated AccountView")
     void updateAccount_updatesFields() throws Exception {
-        UUID id = UUID.randomUUID();
-        insertUser(id, "John Doe", "john.doe@example.com", "+237670000000", List.of(UserRole.CLIENT.name()));
+        User user = seedUserClient("John Doe", "john.doe@example.com", "+237670000000");
 
         AccountUpdateRequest update = new AccountUpdateRequest(
                 "John D.",
@@ -94,11 +69,11 @@ public class AccountResourceIT extends AbstractIntegrationTest {
 
         mockMvc.perform(patch("/api/accounts")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .with(user(id.toString()).roles("CLIENT"))
+                        .with(user(user.id().toString()).roles("CLIENT"))
                         .content(payload)
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(id.toString()))
+                .andExpect(jsonPath("$.id").value(user.id().toString()))
                 .andExpect(jsonPath("$.fullName").value("John D."))
                 .andExpect(jsonPath("$.email").value("john.d@example.com"))
                 .andExpect(jsonPath("$.phone").value("+237674444444"));
