@@ -13,13 +13,9 @@ import software.amazon.awssdk.services.s3.S3Client;
 @EnableJpaRepositories(basePackages = "com.kezisoft.nyounda.persistence")
 @EntityScan(basePackages = "com.kezisoft.nyounda.persistence")
 public class PersistenceConfiguration {
-
-    @Value("${storage.s3.region}")
-    String regionName;
-
     @Bean
     @Profile("prod")
-    public S3Client s3Client() {
+    public S3Client s3Client(@Value("${storage.s3.region}") String regionName) {
         return S3Client
                 .builder()
                 .region(Region.of(regionName))

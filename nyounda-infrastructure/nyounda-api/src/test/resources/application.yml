@@ -1,0 +1,17 @@
+spring:
+  profiles:
+    active: test
+  mvc:
+    problemdetails:
+      enabled: true
+  config:
+    import: "classpath:application-persistence.yml"
+  application:
+    name: Nyounda-api
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+jwt:
+  secret: kkzGJbQJb3Nf4UwHeA6AXEx3KnYtsS9fJExBHp+u1fwWuY1Yh03JZ+YzMyGJH2b6KKxLaKU9H1qTsFV4pyzQbQ==
+  token-validity-in-seconds: 86400

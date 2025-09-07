@@ -15,7 +15,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
 @Component
-@Profile("local")
+@Profile({"local", "test"})
 @RequiredArgsConstructor
 public class LocalFsImageStorage implements ImageStorage {
 
