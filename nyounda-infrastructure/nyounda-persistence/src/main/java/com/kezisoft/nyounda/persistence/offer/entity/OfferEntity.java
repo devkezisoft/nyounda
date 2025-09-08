@@ -5,7 +5,7 @@ import com.kezisoft.nyounda.domain.offer.*;
 import com.kezisoft.nyounda.domain.servicerequest.Money;
 import com.kezisoft.nyounda.persistence.servicerequest.entity.ServiceRequestEntity;
 import com.kezisoft.nyounda.persistence.user.entity.UserEntity;
-import io.hypersistence.utils.hibernate.type.json.JsonStringType;
+import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Type;
@@ -38,11 +38,11 @@ public class OfferEntity {
     @Column(name = "mode", length = 20, nullable = false)
     private OfferMode mode;
 
-    @Type(JsonStringType.class)
+    @Type(JsonBinaryType.class)
     @Column(columnDefinition = "jsonb", nullable = false)
     private Money amount;
 
-    @Type(JsonStringType.class)
+    @Type(JsonBinaryType.class)
     @Column(columnDefinition = "jsonb")
     private List<OfferExpense> expenses;
 

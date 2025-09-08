@@ -50,6 +50,7 @@ public class ServiceRequestRepositoryAdapter implements ServiceRequestRepository
     public Page<ServiceRequest> search(ServiceRequestSearchQuery q) {
         Specification<ServiceRequestEntity> criterias = Specification.allOf(
                 spec.notCanceled(),
+                spec.excludeUser(q.userId()),
                 spec.hasAnySkill(q.skillIds()),
                 spec.isWithinRadius(q.address(), q.radiusKm())
         );

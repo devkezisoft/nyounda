@@ -22,7 +22,7 @@ public record OfferCreateRequest(
                 mode,
                 Money.xaf(amount),
                 expenses.stream()
-                        .map(e -> OfferExpense.of(e.label(), Money.xaf(e.pric())))
+                        .map(e -> OfferExpense.of(e.label(), Money.xaf(e.price())))
                         .toList(),
                 message
         );

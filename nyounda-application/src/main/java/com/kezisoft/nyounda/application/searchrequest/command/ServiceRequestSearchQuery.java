@@ -7,6 +7,7 @@ import java.util.UUID;
 
 // application/dto
 public record ServiceRequestSearchQuery(
+        UUID userId,          // optional for distance calculation
         List<UUID> skillIds,
         String address,         // optional for geocoding/filter
         Integer radiusKm,       // optional
@@ -14,7 +15,8 @@ public record ServiceRequestSearchQuery(
 ) {
     public ServiceRequestSearchQuery fixed() {
         return new ServiceRequestSearchQuery(
-                skillIds == null ? List.of() : skillIds,
+                userId,
+                skillIds == null ? java.util.List.of() : skillIds,
                 address,
                 (radiusKm() == null || radiusKm() <= 0) ? 50 : radiusKm(),
                 pageable

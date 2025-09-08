@@ -7,6 +7,7 @@ import com.kezisoft.nyounda.application.shared.exception.AccountNotFoundExceptio
 import com.kezisoft.nyounda.application.shared.exception.NotFoundException;
 import com.kezisoft.nyounda.domain.offer.Offer;
 import com.kezisoft.nyounda.domain.offer.OfferId;
+import com.kezisoft.nyounda.domain.offer.OfferStatus;
 import com.kezisoft.nyounda.domain.servicerequest.ServiceRequestId;
 import com.kezisoft.nyounda.persistence.offer.entity.OfferEntity;
 import com.kezisoft.nyounda.persistence.offer.jpa.JpaOfferRepository;
@@ -17,8 +18,7 @@ import com.kezisoft.nyounda.persistence.user.jpa.JpaUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Repository
 @RequiredArgsConstructor
@@ -55,8 +55,13 @@ public class OfferRepositoryAdapter implements OfferRepository {
         UserEntity user = jpaUserRepo.findById(userId)
                 .orElseThrow(AccountNotFoundException::new);
 
-        return repo.existsByRequestAndUser(
-                req, user
+        return repo.existsByRequestAndUserAndStatusIn(
+                req, user, EnumSet.of(OfferStatus.PENDING, OfferStatus.ACCEPTED)
         );
+    }
+
+    @Override
+    public Set<UUID> findRequestIdsAppliedByUser(UUID userId, Collection<UUID> reqIds) {
+        return repo.findRequestIdsAppliedByUser(userId, reqIds);
     }
 }

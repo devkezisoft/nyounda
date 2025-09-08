@@ -5,7 +5,9 @@ import com.kezisoft.nyounda.domain.offer.Offer;
 import com.kezisoft.nyounda.domain.offer.OfferId;
 import com.kezisoft.nyounda.domain.servicerequest.ServiceRequestId;
 
+import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 public interface OfferRepository {
@@ -15,4 +17,6 @@ public interface OfferRepository {
 
     // optional: to prevent duplicates (one active offer per provider/request)
     boolean existsActiveByRequestAndProvider(ServiceRequestId requestId, UUID userId);
+
+    Set<UUID> findRequestIdsAppliedByUser(UUID userId, Collection<UUID> reqIds);
 }

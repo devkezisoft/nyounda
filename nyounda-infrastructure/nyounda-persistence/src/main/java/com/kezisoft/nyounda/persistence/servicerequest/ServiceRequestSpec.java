@@ -31,4 +31,8 @@ public class ServiceRequestSpec {
     public Specification<ServiceRequestEntity> notCanceled() {
         return (root, cq, cb) -> cb.not(root.get("status").in("CANCELED"));
     }
+
+    public Specification<ServiceRequestEntity> excludeUser(UUID userId) {
+        return (root, cq, cb) -> cb.notEqual(root.get("user").get("id"), userId);
+    }
 }

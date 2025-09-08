@@ -1,4 +1,4 @@
 package com.kezisoft.nyounda.api.offer.request;
 
-public record ExpenseRequest(String label, double pric) {
+public record ExpenseRequest(String label, double price) {
 }
