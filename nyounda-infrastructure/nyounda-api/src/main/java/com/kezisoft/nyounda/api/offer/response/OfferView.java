@@ -21,5 +21,14 @@ public record OfferView(
         LocalDateTime createdAt
 ) {
     public static OfferView from(Offer offer) {
+        return new OfferView(
+                offer.id().value(),
+                offer.mode(),
+                offer.amount(),
+                offer.expenses(),
+                offer.message(),
+                offer.status(),
+                offer.createdAt()
+        );
     }
 }
