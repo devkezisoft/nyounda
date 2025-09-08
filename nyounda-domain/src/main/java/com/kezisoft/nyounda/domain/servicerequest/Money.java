@@ -10,4 +10,8 @@ public record Money(BigDecimal amount, String currency) {
     public static Money xaf(BigDecimal amount) {
         return new Money(amount, "XAF");
     }
+
+    public static Money xaf(double amount) {
+        return xaf(BigDecimal.valueOf(amount));
+    }
 }

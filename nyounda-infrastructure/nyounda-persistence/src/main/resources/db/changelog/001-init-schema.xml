@@ -233,5 +233,77 @@
                                  onDelete="CASCADE"/>
     </changeSet>
 
+    <changeSet id="create-offer-table" author="nyounda">
+        <createTable tableName="offer">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="request_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="user_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="mode" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+
+            <!-- Money record serialized as JSON -->
+            <column name="amount" type="JSONB">
+                <constraints nullable="false"/>
+            </column>
+
+            <!-- List<OfferExpense> serialized as JSON -->
+            <column name="expenses" type="JSONB"/>
+
+            <column name="message" type="TEXT"/>
+
+            <column name="status" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_at" type="timestamptz" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- FKs -->
+        <addForeignKeyConstraint
+                baseTableName="offer"
+                baseColumnNames="request_id"
+                constraintName="fk_offer_request"
+                referencedTableName="service_request"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint
+                baseTableName="offer"
+                baseColumnNames="user_id"
+                constraintName="fk_offer_user"
+                referencedTableName="users"
+                referencedColumnNames="id"
+                onDelete="RESTRICT"/>
+
+        <!-- Helpful indexes -->
+        <createIndex tableName="offer" indexName="idx_offer_request">
+            <column name="request_id"/>
+        </createIndex>
+
+        <createIndex tableName="offer" indexName="idx_offer_user">
+            <column name="user_id"/>
+        </createIndex>
+
+        <createIndex tableName="offer" indexName="idx_offer_status">
+            <column name="status"/>
+        </createIndex>
+
+        <createIndex tableName="offer" indexName="idx_offer_created_at">
+            <column name="created_at"/>
+        </createIndex>
+    </changeSet>
+
 
 </databaseChangeLog>

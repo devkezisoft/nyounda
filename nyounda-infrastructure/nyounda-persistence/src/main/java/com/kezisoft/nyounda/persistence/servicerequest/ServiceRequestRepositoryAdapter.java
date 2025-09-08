@@ -18,7 +18,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class ServiceRequestRequestRepositoryAdapter implements ServiceRequestRepository {
+public class ServiceRequestRepositoryAdapter implements ServiceRequestRepository {
 
     private final JpaServiceRequestRepository repository;
     private final ServiceRequestSpec spec;
