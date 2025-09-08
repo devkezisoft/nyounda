@@ -5,6 +5,7 @@ import com.kezisoft.nyounda.application.images.port.in.ImageUseCase;
 import com.kezisoft.nyounda.application.servicerequest.command.ServiceRequestCreateCommand;
 import com.kezisoft.nyounda.application.servicerequest.command.UpdateServiceCommand;
 import com.kezisoft.nyounda.application.servicerequest.port.in.ServiceRequestUseCase;
+import com.kezisoft.nyounda.application.servicerequest.port.out.OfferReadPort;
 import com.kezisoft.nyounda.application.servicerequest.port.out.ServiceRequestRepository;
 import com.kezisoft.nyounda.application.shared.exception.AccountNotFoundException;
 import com.kezisoft.nyounda.application.shared.exception.CategoryNotFoundException;
@@ -29,6 +30,7 @@ public class ServiceRequestHandler implements ServiceRequestUseCase {
 
     private final ServiceRequestRepository serviceRequestRepository;
     private final CategoriesRepository categoryRepository;
+    private final OfferReadPort offerReadPort;
     private final ImageUseCase imageUseCase;
     private final UserUseCase userUseCase;
 
@@ -130,5 +132,12 @@ public class ServiceRequestHandler implements ServiceRequestUseCase {
     public Optional<ServiceRequest> findById(ServiceRequestId id) {
         log.debug("Fetching service request by id: {}", id);
         return serviceRequestRepository.findById(id);
+    }
+
+    @Override
+    public boolean hasUserAlreadyApplied(UUID userId, ServiceRequestId serviceRequestId) {
+        return offerReadPort.existsOfferForRequestAndUser(
+                serviceRequestId.value(), userId
+        );
     }
 }

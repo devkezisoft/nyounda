@@ -2,9 +2,9 @@
 package com.kezisoft.nyounda.persistence.offer;
 
 import com.kezisoft.nyounda.application.offer.port.out.OfferRepository;
-import com.kezisoft.nyounda.application.servicerequest.port.out.ServiceRequestRepository;
 import com.kezisoft.nyounda.application.shared.exception.AccountNotFoundException;
 import com.kezisoft.nyounda.application.shared.exception.NotFoundException;
+import com.kezisoft.nyounda.application.shared.exception.ServiceRequestNotFoundException;
 import com.kezisoft.nyounda.domain.offer.Offer;
 import com.kezisoft.nyounda.domain.offer.OfferId;
 import com.kezisoft.nyounda.domain.offer.OfferStatus;
@@ -25,7 +25,6 @@ import java.util.*;
 public class OfferRepositoryAdapter implements OfferRepository {
 
     private final JpaOfferRepository repo;
-    private final ServiceRequestRepository serviceRequestRepository; // domain repo
     private final JpaServiceRequestRepository jpaRequestRepo;
     private final JpaUserRepository jpaUserRepo;
 
@@ -50,7 +49,7 @@ public class OfferRepositoryAdapter implements OfferRepository {
     @Override
     public boolean existsActiveByRequestAndProvider(ServiceRequestId requestId, UUID userId) {
         ServiceRequestEntity req = jpaRequestRepo.findById(requestId.value())
-                .orElseThrow(() -> new NotFoundException("Service request not found: " + requestId.value(), "servicerequest", "servicerequestNotFound"));
+                .orElseThrow(() -> new ServiceRequestNotFoundException(requestId.value()));
 
         UserEntity user = jpaUserRepo.findById(userId)
                 .orElseThrow(AccountNotFoundException::new);

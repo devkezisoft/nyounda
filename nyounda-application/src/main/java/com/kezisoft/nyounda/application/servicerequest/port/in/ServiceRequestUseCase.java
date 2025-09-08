@@ -20,4 +20,6 @@ public interface ServiceRequestUseCase {
     List<ServiceRequest> findAllByUserId(UUID userId);
 
     Optional<ServiceRequest> findById(ServiceRequestId id);
+
+    boolean hasUserAlreadyApplied(UUID userId, ServiceRequestId serviceRequestId);
 }

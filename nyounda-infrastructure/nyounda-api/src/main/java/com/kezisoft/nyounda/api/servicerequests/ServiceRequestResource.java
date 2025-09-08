@@ -3,6 +3,7 @@ package com.kezisoft.nyounda.api.servicerequests;
 import com.kezisoft.nyounda.api.security.SecurityUtils;
 import com.kezisoft.nyounda.api.servicerequests.request.CreateRequest;
 import com.kezisoft.nyounda.api.servicerequests.request.UpdateRequest;
+import com.kezisoft.nyounda.api.servicerequests.response.ServiceRequestDetailView;
 import com.kezisoft.nyounda.api.servicerequests.response.ServiceRequestView;
 import com.kezisoft.nyounda.application.servicerequest.port.in.ServiceRequestUseCase;
 import com.kezisoft.nyounda.application.shared.exception.AccountNotFoundException;
@@ -50,9 +51,15 @@ public class ServiceRequestResource {
     }
 
     @GetMapping("/{id}")
-    public ServiceRequestView findById(@PathVariable UUID id) {
+    public ServiceRequestDetailView findById(@PathVariable UUID id) {
+        UUID currentUserId = SecurityUtils.getCurrentUserLogin()
+                .map(UUID::fromString)
+                .orElseThrow(AccountNotFoundException::new);
         return serviceRequestUseCase.findById(ServiceRequestId.valueOf(id))
-                .map(ServiceRequestView::from)
+                .map(req -> ServiceRequestDetailView.from(
+                        req,
+                        serviceRequestUseCase.hasUserAlreadyApplied(currentUserId, req.id())
+                ))
                 .orElseThrow(ServiceRequestNotFoundException::new);
     }
 
