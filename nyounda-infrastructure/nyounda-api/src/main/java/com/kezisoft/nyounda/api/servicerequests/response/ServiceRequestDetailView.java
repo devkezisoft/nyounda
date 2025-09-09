@@ -3,6 +3,7 @@ package com.kezisoft.nyounda.api.servicerequests.response;
 import com.kezisoft.nyounda.api.account.view.UserView;
 import com.kezisoft.nyounda.api.categories.response.CategoryView;
 import com.kezisoft.nyounda.api.images.response.ImageView;
+import com.kezisoft.nyounda.domain.servicerequest.OfferCandidateView;
 import com.kezisoft.nyounda.domain.servicerequest.ServiceRequest;
 import com.kezisoft.nyounda.domain.servicerequest.ServiceRequestStatus;
 
@@ -21,9 +22,13 @@ public record ServiceRequestDetailView(
         String address,
         LocalDateTime createdAt,
         UserView user,
-        boolean applied //
+        boolean applied,
+        List<OfferCandidateView> candidates
 ) {
-    public static ServiceRequestDetailView from(ServiceRequest serviceRequest, boolean applied) {
+    public static ServiceRequestDetailView from(
+            ServiceRequest serviceRequest,
+            boolean applied,
+            List<OfferCandidateView> candidates) {
         return new ServiceRequestDetailView(
                 serviceRequest.id().value(),
                 serviceRequest.status(),
@@ -37,7 +42,8 @@ public record ServiceRequestDetailView(
                 serviceRequest.address(),
                 serviceRequest.createdAt(),
                 UserView.fromDomain(serviceRequest.user()),
-                applied
+                applied,
+                candidates
         );
     }
 }

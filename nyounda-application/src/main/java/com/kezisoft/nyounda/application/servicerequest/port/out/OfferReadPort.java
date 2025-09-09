@@ -1,5 +1,9 @@
 package com.kezisoft.nyounda.application.servicerequest.port.out;
 
+import com.kezisoft.nyounda.domain.servicerequest.OfferCandidateView;
+import com.kezisoft.nyounda.domain.servicerequest.ServiceRequestId;
+
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -14,4 +18,6 @@ public interface OfferReadPort {
             UUID requestId,
             UUID userId
     );
+
+    List<OfferCandidateView> findCandidates(ServiceRequestId requestId);
 }

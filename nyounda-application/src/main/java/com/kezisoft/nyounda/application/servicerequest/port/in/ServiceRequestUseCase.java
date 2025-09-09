@@ -2,6 +2,7 @@ package com.kezisoft.nyounda.application.servicerequest.port.in;
 
 import com.kezisoft.nyounda.application.servicerequest.command.ServiceRequestCreateCommand;
 import com.kezisoft.nyounda.application.servicerequest.command.UpdateServiceCommand;
+import com.kezisoft.nyounda.domain.servicerequest.OfferCandidateView;
 import com.kezisoft.nyounda.domain.servicerequest.ServiceRequest;
 import com.kezisoft.nyounda.domain.servicerequest.ServiceRequestId;
 
@@ -22,4 +23,7 @@ public interface ServiceRequestUseCase {
     Optional<ServiceRequest> findById(ServiceRequestId id);
 
     boolean hasUserAlreadyApplied(UUID userId, ServiceRequestId serviceRequestId);
+
+    List<OfferCandidateView> findCandidates(ServiceRequestId requestId);
+
 }

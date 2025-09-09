@@ -10,6 +10,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Type;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -55,6 +56,16 @@ public class OfferEntity {
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+
+    public Money getTotalAmount() {
+        BigDecimal total = amount.amount();
+        if (expenses != null) {
+            for (OfferExpense expense : expenses) {
+                total = total.add(expense.price().amount());
+            }
+        }
+        return new Money(total, amount.currency());
+    }
 
     public Offer toDomain() {
         return new Offer(

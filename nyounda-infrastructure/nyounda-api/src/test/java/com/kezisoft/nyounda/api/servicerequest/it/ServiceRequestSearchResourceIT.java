@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 public class ServiceRequestSearchResourceIT extends AbstractIntegrationTest {
 
-    private UUID createRequestViaApi(
+    private void createRequestViaApi(
             User asUser, UUID categoryId, UUID subCategoryId,
             String title, String description, String address
     ) throws Exception {
@@ -42,7 +42,6 @@ public class ServiceRequestSearchResourceIT extends AbstractIntegrationTest {
                 .andReturn();
 
         ServiceRequestView view = objectMapper.readValue(res.getResponse().getContentAsString(), ServiceRequestView.class);
-        return view.id();
     }
 
     @Test

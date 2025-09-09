@@ -58,7 +58,8 @@ public class ServiceRequestResource {
         return serviceRequestUseCase.findById(ServiceRequestId.valueOf(id))
                 .map(req -> ServiceRequestDetailView.from(
                         req,
-                        serviceRequestUseCase.hasUserAlreadyApplied(currentUserId, req.id())
+                        serviceRequestUseCase.hasUserAlreadyApplied(currentUserId, req.id()),
+                        serviceRequestUseCase.findCandidates(req.id())
                 ))
                 .orElseThrow(ServiceRequestNotFoundException::new);
     }
