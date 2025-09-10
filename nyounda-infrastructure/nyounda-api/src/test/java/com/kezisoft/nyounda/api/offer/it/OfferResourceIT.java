@@ -144,7 +144,7 @@ public class OfferResourceIT extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("POST /api/requests/{reqId}/offers/{offerId}/decline -> CLIENT declines an offer with reason")
+    @DisplayName("PATCH /api/requests/{reqId}/offers/{offerId}/decline -> CLIENT declines an offer with reason")
     void decline_offer_ok() throws Exception {
         // Seed actors
         User client = seedUserClient("Client X", "clientX@example.com", "+237600010000");
@@ -190,7 +190,7 @@ public class OfferResourceIT extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("POST /api/requests/{reqId}/offers/{offerId}/choose -> CLIENT chooses an offer (sets chosen_offer and ACCEPTED)")
+    @DisplayName("PATCH /api/requests/{reqId}/offers/{offerId}/choose -> CLIENT chooses an offer (sets chosen_offer and ACCEPTED)")
     void choose_offer_ok() throws Exception {
         // Seed actors
         User client = seedUserClient("Client Y", "clientY@example.com", "+237600020000");

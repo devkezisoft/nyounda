@@ -32,7 +32,7 @@ public abstract class AbstractIntegrationTest {
     protected ObjectMapper objectMapper;
 
     @MockitoBean
-    PinCodeProvider pinCodeProvider;
+    protected PinCodeProvider pinCodeProvider;
 
     //✅ JVM-wide singleton container (no @BeforeAll, no @Testcontainers needed)
     private static final PostgreSQLContainer<?> POSTGRES;
