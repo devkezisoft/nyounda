@@ -52,11 +52,11 @@ public interface JpaOfferRepository extends JpaRepository<OfferEntity, UUID> {
             @Param("statuses") Collection<OfferStatus> statuses
     );
 
-    @Modifying
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("update OfferEntity o set o.status=com.kezisoft.nyounda.domain.offer.OfferStatus.REJECTED, o.declineReason=:reason where o.id=:id")
     int markDeclined(@Param("id") UUID id, @Param("reason") String reason);
 
-    @Modifying
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("update OfferEntity o set o.status=com.kezisoft.nyounda.domain.offer.OfferStatus.ACCEPTED where o.id=:id")
     int markAccepted(@Param("id") UUID id);
 

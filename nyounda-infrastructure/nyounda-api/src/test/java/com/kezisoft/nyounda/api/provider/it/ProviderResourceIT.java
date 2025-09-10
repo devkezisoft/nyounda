@@ -28,11 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 public class ProviderResourceIT extends AbstractIntegrationTest {
 
-    // ---------- Helpers -----------------------------------------------------
 
-    /**
-     * Create a provider via API, returning the persisted ProviderView
-     */
     private ProviderView createProviderViaApi(User currentUser, UUID categoryId, UUID subCategoryId, String location) throws Exception {
         var req = new ProviderCreateRequest(
                 List.of(new ProviderSkillCreateRequest(

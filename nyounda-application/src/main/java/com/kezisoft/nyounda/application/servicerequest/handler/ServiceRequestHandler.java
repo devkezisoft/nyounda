@@ -11,6 +11,7 @@ import com.kezisoft.nyounda.application.shared.exception.AccountNotFoundExceptio
 import com.kezisoft.nyounda.application.shared.exception.CategoryNotFoundException;
 import com.kezisoft.nyounda.application.shared.exception.ServiceRequestNotFoundException;
 import com.kezisoft.nyounda.application.user.port.in.UserUseCase;
+import com.kezisoft.nyounda.domain.offer.OfferId;
 import com.kezisoft.nyounda.domain.servicerequest.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -144,7 +145,7 @@ public class ServiceRequestHandler implements ServiceRequestUseCase {
     }
 
     @Override
-    public void setChosenOffer(ServiceRequestId serviceRequestId, UUID offerId) {
+    public void setChosenOffer(ServiceRequestId serviceRequestId, OfferId offerId) {
         serviceRequestRepository.setChosenOffer(serviceRequestId, offerId);
     }
 

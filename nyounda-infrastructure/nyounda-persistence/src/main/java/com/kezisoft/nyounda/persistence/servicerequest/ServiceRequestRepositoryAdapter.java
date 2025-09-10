@@ -2,6 +2,7 @@ package com.kezisoft.nyounda.persistence.servicerequest;
 
 import com.kezisoft.nyounda.application.searchrequest.command.ServiceRequestSearchQuery;
 import com.kezisoft.nyounda.application.servicerequest.port.out.ServiceRequestRepository;
+import com.kezisoft.nyounda.domain.offer.OfferId;
 import com.kezisoft.nyounda.domain.servicerequest.ServiceRequest;
 import com.kezisoft.nyounda.domain.servicerequest.ServiceRequestId;
 import com.kezisoft.nyounda.domain.user.User;
@@ -16,7 +17,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Slf4j
 @Repository
@@ -64,8 +64,8 @@ public class ServiceRequestRepositoryAdapter implements ServiceRequestRepository
     }
 
     @Override
-    public void setChosenOffer(ServiceRequestId requestId, UUID offerId) {
-        int updatedCount = repository.setChosenOffer(requestId.value(), offerId);
+    public void setChosenOffer(ServiceRequestId requestId, OfferId offerId) {
+        int updatedCount = repository.setChosenOffer(requestId.value(), offerId.value());
         if (updatedCount == 0) {
             log.warn("No service request found with id: {}", requestId);
         }

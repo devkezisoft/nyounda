@@ -1,6 +1,7 @@
 package com.kezisoft.nyounda.application.servicerequest.port.out;
 
 import com.kezisoft.nyounda.application.searchrequest.command.ServiceRequestSearchQuery;
+import com.kezisoft.nyounda.domain.offer.OfferId;
 import com.kezisoft.nyounda.domain.servicerequest.ServiceRequest;
 import com.kezisoft.nyounda.domain.servicerequest.ServiceRequestId;
 import com.kezisoft.nyounda.domain.user.User;
@@ -8,7 +9,6 @@ import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 public interface ServiceRequestRepository {
 
@@ -22,5 +22,5 @@ public interface ServiceRequestRepository {
 
     Page<ServiceRequest> search(ServiceRequestSearchQuery fixed);
 
-    void setChosenOffer(ServiceRequestId requestId, UUID offerId);
+    void setChosenOffer(ServiceRequestId requestId, OfferId offerId);
 }

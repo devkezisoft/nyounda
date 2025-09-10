@@ -8,6 +8,7 @@ import com.kezisoft.nyounda.api.security.SecurityUtils;
 import com.kezisoft.nyounda.application.offer.port.in.OfferUseCase;
 import com.kezisoft.nyounda.application.shared.exception.ProviderNotFoundException;
 import com.kezisoft.nyounda.domain.offer.Offer;
+import com.kezisoft.nyounda.domain.offer.OfferId;
 import com.kezisoft.nyounda.domain.servicerequest.ServiceRequestId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -51,23 +52,23 @@ public class OfferResource {
 
     // Client declines an offer
     @PreAuthorize("hasRole('CLIENT')")
-    @PostMapping("/{offerId}/decline")
+    @PatchMapping("/{offerId}/decline")
     public ResponseEntity<Void> decline(@PathVariable UUID offerId, @RequestBody OfferDeclineRequest body) {
         UUID currentUserId = SecurityUtils.getCurrentUserLogin()
                 .map(UUID::fromString)
                 .orElseThrow(ProviderNotFoundException::new);
-        offerUseCase.decline(offerId, currentUserId, body.reason());
+        offerUseCase.decline(OfferId.of(offerId), currentUserId, body.reason());
         return ResponseEntity.noContent().build();
     }
 
     // Client chooses an offer for a request
     @PreAuthorize("hasRole('CLIENT')")
-    @PostMapping("/{offerId}/choose")
+    @PatchMapping("/{offerId}/choose")
     public ResponseEntity<Void> choose(@PathVariable UUID requestId, @PathVariable UUID offerId) {
         UUID currentUserId = SecurityUtils.getCurrentUserLogin()
                 .map(UUID::fromString)
                 .orElseThrow(ProviderNotFoundException::new);
-        offerUseCase.choose(ServiceRequestId.valueOf(requestId), offerId, currentUserId);
+        offerUseCase.choose(ServiceRequestId.valueOf(requestId), OfferId.of(offerId), currentUserId);
         return ResponseEntity.noContent().build();
     }
 }

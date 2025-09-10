@@ -8,6 +8,7 @@ import com.kezisoft.nyounda.application.servicerequest.port.in.ServiceRequestUse
 import com.kezisoft.nyounda.application.shared.exception.AccountNotFoundException;
 import com.kezisoft.nyounda.application.user.port.in.UserUseCase;
 import com.kezisoft.nyounda.domain.offer.Offer;
+import com.kezisoft.nyounda.domain.offer.OfferId;
 import com.kezisoft.nyounda.domain.offer.OfferStatus;
 import com.kezisoft.nyounda.domain.servicerequest.ServiceRequest;
 import com.kezisoft.nyounda.domain.servicerequest.ServiceRequestId;
@@ -51,13 +52,21 @@ public class OfferUseCaseHandler implements OfferUseCase {
 
     @Override
     @Transactional
-    public void decline(UUID offerId, UUID byClientId, String reason) {
-
+    public void decline(OfferId offerId, UUID byClientId, String reason) {
+// security check: offer.request.user.id == byClientId
+        var offer = offerRepository.findById(offerId)
+                .orElseThrow(() -> new IllegalArgumentException("Offer not found"));
+        var request = serviceRequestUseCase.findById(offer.request().id())
+                .orElseThrow(() -> new IllegalArgumentException("Request not found"));
+        if (!request.user().id().equals(byClientId)) {
+            throw new SecurityException("Not the owner of this request.");
+        }
+        offerRepository.markDeclined(offerId, reason);
     }
 
     @Override
     @Transactional
-    public void choose(ServiceRequestId requestId, UUID offerId, UUID byClientId) {
+    public void choose(ServiceRequestId requestId, OfferId offerId, UUID byClientId) {
         // security check
         var request = serviceRequestUseCase.findById(requestId)
                 .orElseThrow(() -> new IllegalArgumentException("Request not found"));

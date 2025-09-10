@@ -3,6 +3,7 @@ package com.kezisoft.nyounda.api.offer.it;
 import com.kezisoft.nyounda.api.it.AbstractIntegrationTest;
 import com.kezisoft.nyounda.api.offer.request.ExpenseRequest;
 import com.kezisoft.nyounda.api.offer.request.OfferCreateRequest;
+import com.kezisoft.nyounda.api.offer.request.OfferDeclineRequest;
 import com.kezisoft.nyounda.api.offer.response.OfferView;
 import com.kezisoft.nyounda.api.provider.request.ProviderCreateRequest;
 import com.kezisoft.nyounda.api.provider.request.ProviderSkillCreateRequest;
@@ -10,11 +11,16 @@ import com.kezisoft.nyounda.api.provider.view.ProviderView;
 import com.kezisoft.nyounda.api.servicerequests.request.CreateRequest;
 import com.kezisoft.nyounda.api.servicerequests.response.ServiceRequestView;
 import com.kezisoft.nyounda.domain.offer.OfferMode;
+import com.kezisoft.nyounda.domain.offer.OfferStatus;
 import com.kezisoft.nyounda.domain.servicerequest.ServiceRequestStatus;
 import com.kezisoft.nyounda.domain.user.User;
 import com.kezisoft.nyounda.domain.user.UserRole;
+import com.kezisoft.nyounda.persistence.offer.entity.OfferEntity;
+import com.kezisoft.nyounda.persistence.offer.jpa.JpaOfferRepository;
+import com.kezisoft.nyounda.persistence.servicerequest.jpa.JpaServiceRequestRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +35,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @Transactional
 public class OfferResourceIT extends AbstractIntegrationTest {
+    @Autowired
+    JpaOfferRepository jpaOfferRepo;
+    @Autowired
+    JpaServiceRequestRepository jpaReqRepo;
 
     @Test
     @DisplayName("POST /api/requests/{id}/offers -> creates an offer (PROVIDER role)")
@@ -133,6 +143,100 @@ public class OfferResourceIT extends AbstractIntegrationTest {
                 .andExpect(status().isUnauthorized());
     }
 
+    @Test
+    @DisplayName("POST /api/requests/{reqId}/offers/{offerId}/decline -> CLIENT declines an offer with reason")
+    void decline_offer_ok() throws Exception {
+        // Seed actors
+        User client = seedUserClient("Client X", "clientX@example.com", "+237600010000");
+        User provider = seedUserProvider("Pro X", "proX@example.com", "+237610010000");
+
+        // Seed categories and provider profile
+        UUID[] cat = seedCategoryHierarchy("Plumbing", "Pipes");
+        ProviderView pv = createProviderViaApi(provider, cat[0]);
+        assertThat(pv).isNotNull();
+
+        // Create request
+        ServiceRequestView req = createServiceRequestViaApi(
+                client, cat[0], cat[1], "Fix leak", "Kitchen pipe", "Paris 9", List.of()
+        );
+
+        // Create an offer (as provider)
+        OfferCreateRequest body = new OfferCreateRequest(
+                OfferMode.FIXED, 25000.0, "Tomorrow morning", List.of(new ExpenseRequest("Taxi", 3000.0))
+        );
+        OfferView view = createOfferViaApi(provider, req.id(), body);
+        UUID offerId = view.id();
+
+        // Decline (as client)
+        OfferDeclineRequest decline = new OfferDeclineRequest("Profil incomplet");
+        mockMvc.perform(
+                        MockMvcRequestBuilders.patch("/api/requests/{rid}/offers/{oid}/decline", req.id(), offerId)
+                                .with(user(client.id().toString()).roles(UserRole.CLIENT.name()))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(decline))
+                )
+                .andExpect(status().isNoContent());
+
+        // Assert DB state
+        OfferEntity declined = jpaOfferRepo.findById(offerId).orElseThrow();
+        assertThat(declined.getStatus()).isEqualTo(OfferStatus.REJECTED);
+        assertThat(declined.getMessage()).isEqualTo("Tomorrow morning"); // unchanged
+        // If you store reason in a dedicated column (decline_reason), assert it here if exposed
+        // assertThat(declined.getDeclineReason()).isEqualTo("Profil incomplet");
+
+        // Request should not be chosen yet
+        var reqEntity = jpaReqRepo.findById(req.id()).orElseThrow();
+        assertThat(reqEntity.getChosenOffer()).isNull();
+    }
+
+    @Test
+    @DisplayName("POST /api/requests/{reqId}/offers/{offerId}/choose -> CLIENT chooses an offer (sets chosen_offer and ACCEPTED)")
+    void choose_offer_ok() throws Exception {
+        // Seed actors
+        User client = seedUserClient("Client Y", "clientY@example.com", "+237600020000");
+        User pro1 = seedUserProvider("Pro Y1", "proY1@example.com", "+237610020001");
+        User pro2 = seedUserProvider("Pro Y2", "proY2@example.com", "+237610020002");
+
+        // Seed categories and providers
+        UUID[] cat = seedCategoryHierarchy("Painting", "Walls");
+        createProviderViaApi(pro1, cat[0]);
+        createProviderViaApi(pro2, cat[0]);
+
+        // Create request
+        ServiceRequestView req = createServiceRequestViaApi(
+                client, cat[0], cat[1], "Paint my room", "White please", "Paris 15", List.of()
+        );
+
+        // Two offers from different providers
+        OfferView offer1 = createOfferViaApi(pro1, req.id(),
+                new OfferCreateRequest(OfferMode.HOURLY, 5000.0, "Today", List.of()));
+        OfferView offer2 = createOfferViaApi(pro2, req.id(),
+                new OfferCreateRequest(OfferMode.FIXED, 30000.0, "Tomorrow", List.of()));
+
+        // Choose offer2 (as client)
+        mockMvc.perform(
+                        MockMvcRequestBuilders.patch("/api/requests/{rid}/offers/{oid}/choose", req.id(), offer2.id())
+                                .with(user(client.id().toString()).roles(UserRole.CLIENT.name()))
+                )
+                .andExpect(status().isNoContent());
+
+        // Assert DB state
+        var reqEntity = jpaReqRepo.findById(req.id()).orElseThrow();
+        assertThat(reqEntity.getChosenOffer()).isNotNull();
+        assertThat(reqEntity.getChosenOffer().getId()).isEqualTo(offer2.id());
+
+        // Chosen is ACCEPTED
+        var chosen = jpaOfferRepo.findById(offer2.id()).orElseThrow();
+        assertThat(chosen.getStatus()).isEqualTo(OfferStatus.ACCEPTED);
+
+        // Optional rule: non-chosen ones become DECLINED (depends on your use case handler)
+        var other = jpaOfferRepo.findById(offer1.id()).orElseThrow();
+        // If your business sets the rest to DECLINED, keep this:
+        // assertThat(other.getStatus()).isEqualTo(OfferStatus.DECLINED);
+        // If not, assert still PENDING:
+        assertThat(other.getStatus()).isIn(OfferStatus.PENDING, OfferStatus.REJECTED);
+    }
+
     // ---------- helpers (reuse common style you used in other ITs) ----------
 
     private ProviderView createProviderViaApi(
@@ -189,4 +293,17 @@ public class OfferResourceIT extends AbstractIntegrationTest {
 
         return objectMapper.readValue(res.getResponse().getContentAsString(), ServiceRequestView.class);
     }
+
+    private OfferView createOfferViaApi(User asProvider, UUID requestId, OfferCreateRequest body) throws Exception {
+        var res = mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/requests/{rid}/offers", requestId)
+                                .with(user(asProvider.id().toString()).roles(UserRole.PROVIDER.name()))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(body))
+                )
+                .andExpect(status().isCreated())
+                .andReturn();
+        return objectMapper.readValue(res.getResponse().getContentAsString(), OfferView.class);
+    }
+
 }

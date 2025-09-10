@@ -2,6 +2,7 @@ package com.kezisoft.nyounda.application.servicerequest.port.in;
 
 import com.kezisoft.nyounda.application.servicerequest.command.ServiceRequestCreateCommand;
 import com.kezisoft.nyounda.application.servicerequest.command.UpdateServiceCommand;
+import com.kezisoft.nyounda.domain.offer.OfferId;
 import com.kezisoft.nyounda.domain.servicerequest.OfferCandidateView;
 import com.kezisoft.nyounda.domain.servicerequest.ServiceRequest;
 import com.kezisoft.nyounda.domain.servicerequest.ServiceRequestId;
@@ -26,5 +27,5 @@ public interface ServiceRequestUseCase {
 
     List<OfferCandidateView> findCandidates(ServiceRequestId requestId);
 
-    void setChosenOffer(ServiceRequestId serviceRequestId, UUID offerId);
+    void setChosenOffer(ServiceRequestId serviceRequestId, OfferId offerId);
 }

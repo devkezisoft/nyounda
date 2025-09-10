@@ -17,11 +17,11 @@ public interface OfferRepository {
 
     Set<UUID> findRequestIdsAppliedByUser(UUID userId, Collection<UUID> reqIds);
 
-    void markDeclined(UUID offerId, String reason);
+    void markDeclined(OfferId offerId, String reason);
 
-    void markAccepted(UUID offerId);
+    void markAccepted(OfferId offerId);
 
-    List<UUID> findOtherPendingOfferIdsForRequest(ServiceRequestId requestId, UUID exceptOfferId);
+    List<OfferId> findOtherPendingOfferIdsForRequest(ServiceRequestId requestId, OfferId exceptOfferId);
 
-    void bulkMarkRejected(Collection<UUID> offerIds);
+    void bulkMarkRejected(Collection<OfferId> offerIds);
 }

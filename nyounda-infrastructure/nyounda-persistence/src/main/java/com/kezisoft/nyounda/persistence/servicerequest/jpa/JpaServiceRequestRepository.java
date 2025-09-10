@@ -2,10 +2,7 @@ package com.kezisoft.nyounda.persistence.servicerequest.jpa;
 
 import com.kezisoft.nyounda.persistence.servicerequest.entity.ServiceRequestEntity;
 import com.kezisoft.nyounda.persistence.user.entity.UserEntity;
-import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,6 +18,7 @@ public interface JpaServiceRequestRepository extends JpaRepository<ServiceReques
     @EntityGraph(attributePaths = {"images"})
     Optional<ServiceRequestEntity> findById(UUID id);
 
+    @Modifying
     @Query("update ServiceRequestEntity sr set sr.chosenOffer.id = :offerId where sr.id = :value")
     int setChosenOffer(UUID value, UUID offerId);
 }

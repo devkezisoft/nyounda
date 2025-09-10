@@ -71,33 +71,36 @@ public class OfferRepositoryAdapter implements OfferRepository {
     }
 
     @Override
-    public void markDeclined(UUID offerId, String reason) {
-        int updatedCount = repo.markDeclined(offerId, reason);
+    public void markDeclined(OfferId offerId, String reason) {
+        int updatedCount = repo.markDeclined(offerId.value(), reason);
         if (updatedCount == 0) {
             log.warn("No offer was marked as declined for offerId: {}", offerId);
         }
     }
 
     @Override
-    public void markAccepted(UUID offerId) {
-        int updatedCount = repo.markAccepted(offerId);
+    public void markAccepted(OfferId offerId) {
+        int updatedCount = repo.markAccepted(offerId.value());
         if (updatedCount == 0) {
             log.warn("No offer was marked as accepted for offerId: {}", offerId);
         }
     }
 
     @Override
-    public List<UUID> findOtherPendingOfferIdsForRequest(ServiceRequestId requestId, UUID exceptOfferId) {
-        return repo.findOtherPending(requestId.value(), exceptOfferId);
+    public List<OfferId> findOtherPendingOfferIdsForRequest(ServiceRequestId requestId, OfferId exceptOfferId) {
+        return repo.findOtherPending(requestId.value(), exceptOfferId.value())
+                .stream()
+                .map(OfferId::of)
+                .toList();
     }
 
     @Override
-    public void bulkMarkRejected(Collection<UUID> offerIds) {
+    public void bulkMarkRejected(Collection<OfferId> offerIds) {
         if (CollectionUtils.isEmpty(offerIds)) {
             log.debug("No offer IDs provided for bulk rejection.");
             return;
         }
-        int updatedCount = repo.bulkReject(offerIds);
+        int updatedCount = repo.bulkReject(offerIds.stream().map(OfferId::value).toList());
         log.debug("Bulk rejected {} offers.", updatedCount);
     }
 }
