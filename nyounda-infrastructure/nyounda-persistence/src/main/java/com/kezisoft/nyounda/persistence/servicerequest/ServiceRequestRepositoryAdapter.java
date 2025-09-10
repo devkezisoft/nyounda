@@ -9,13 +9,16 @@ import com.kezisoft.nyounda.persistence.servicerequest.entity.ServiceRequestEnti
 import com.kezisoft.nyounda.persistence.servicerequest.jpa.JpaServiceRequestRepository;
 import com.kezisoft.nyounda.persistence.user.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class ServiceRequestRepositoryAdapter implements ServiceRequestRepository {
@@ -58,5 +61,13 @@ public class ServiceRequestRepositoryAdapter implements ServiceRequestRepository
         Page<ServiceRequestEntity> page = repository.findAll(criterias, q.pageable());
         return page.map(ServiceRequestEntity::toDomain);
 
+    }
+
+    @Override
+    public void setChosenOffer(ServiceRequestId requestId, UUID offerId) {
+        int updatedCount = repository.setChosenOffer(requestId.value(), offerId);
+        if (updatedCount == 0) {
+            log.warn("No service request found with id: {}", requestId);
+        }
     }
 }

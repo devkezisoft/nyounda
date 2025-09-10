@@ -57,6 +57,9 @@ public class OfferEntity {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "decline_reason", columnDefinition = "text")
+    private String declineReason;
+
     public Money getTotalAmount() {
         BigDecimal total = amount.amount();
         if (expenses != null) {

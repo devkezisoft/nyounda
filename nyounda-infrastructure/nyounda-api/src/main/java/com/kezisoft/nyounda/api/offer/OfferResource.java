@@ -2,6 +2,7 @@
 package com.kezisoft.nyounda.api.offer;
 
 import com.kezisoft.nyounda.api.offer.request.OfferCreateRequest;
+import com.kezisoft.nyounda.api.offer.request.OfferDeclineRequest;
 import com.kezisoft.nyounda.api.offer.response.OfferView;
 import com.kezisoft.nyounda.api.security.SecurityUtils;
 import com.kezisoft.nyounda.application.offer.port.in.OfferUseCase;
@@ -18,14 +19,15 @@ import java.util.UUID;
 
 
 @RestController
-@PreAuthorize("hasRole('PROVIDER')")
 @RequiredArgsConstructor
 @RequestMapping("/api/requests/{requestId}/offers")
 public class OfferResource {
 
     private final OfferUseCase offerUseCase;
 
+
     @PostMapping
+    @PreAuthorize("hasRole('PROVIDER')")
     public ResponseEntity<OfferView> create(
             @PathVariable("requestId") UUID requestId,
             @RequestBody OfferCreateRequest body
@@ -45,5 +47,27 @@ public class OfferResource {
         return ResponseEntity
                 .created(URI.create("/api/requests/" + requestId + "/offers" + view.id()))
                 .body(view);
+    }
+
+    // Client declines an offer
+    @PreAuthorize("hasRole('CLIENT')")
+    @PostMapping("/{offerId}/decline")
+    public ResponseEntity<Void> decline(@PathVariable UUID offerId, @RequestBody OfferDeclineRequest body) {
+        UUID currentUserId = SecurityUtils.getCurrentUserLogin()
+                .map(UUID::fromString)
+                .orElseThrow(ProviderNotFoundException::new);
+        offerUseCase.decline(offerId, currentUserId, body.reason());
+        return ResponseEntity.noContent().build();
+    }
+
+    // Client chooses an offer for a request
+    @PreAuthorize("hasRole('CLIENT')")
+    @PostMapping("/{offerId}/choose")
+    public ResponseEntity<Void> choose(@PathVariable UUID requestId, @PathVariable UUID offerId) {
+        UUID currentUserId = SecurityUtils.getCurrentUserLogin()
+                .map(UUID::fromString)
+                .orElseThrow(ProviderNotFoundException::new);
+        offerUseCase.choose(ServiceRequestId.valueOf(requestId), offerId, currentUserId);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -16,10 +16,13 @@ import com.kezisoft.nyounda.persistence.servicerequest.jpa.JpaServiceRequestRepo
 import com.kezisoft.nyounda.persistence.user.entity.UserEntity;
 import com.kezisoft.nyounda.persistence.user.jpa.JpaUserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class OfferRepositoryAdapter implements OfferRepository {
@@ -30,7 +33,7 @@ public class OfferRepositoryAdapter implements OfferRepository {
 
     @Override
     public Offer save(Offer offer) {
-
+        log.debug("Saving offer: {}", offer);
         ServiceRequestEntity req = jpaRequestRepo.findById(offer.request().id().value())
                 .orElseThrow(() -> new NotFoundException("Service request not found: " + offer.request().id(), "servicerequest", "servicerequestNotFound"));
 
@@ -43,11 +46,13 @@ public class OfferRepositoryAdapter implements OfferRepository {
 
     @Override
     public Optional<Offer> findById(OfferId id) {
+        log.debug("Finding offer by id: {}", id);
         return repo.findById(id.value()).map(OfferEntity::toDomain);
     }
 
     @Override
     public boolean existsActiveByRequestAndProvider(ServiceRequestId requestId, UUID userId) {
+        log.debug("Checking existence of active offer for requestId: {} and userId: {}", requestId, userId);
         ServiceRequestEntity req = jpaRequestRepo.findById(requestId.value())
                 .orElseThrow(() -> new ServiceRequestNotFoundException(requestId.value()));
 
@@ -61,6 +66,38 @@ public class OfferRepositoryAdapter implements OfferRepository {
 
     @Override
     public Set<UUID> findRequestIdsAppliedByUser(UUID userId, Collection<UUID> reqIds) {
+        log.debug("Finding request IDs applied by userId: {} within reqIds: {}", userId, reqIds);
         return repo.findRequestIdsAppliedByUser(userId, reqIds);
+    }
+
+    @Override
+    public void markDeclined(UUID offerId, String reason) {
+        int updatedCount = repo.markDeclined(offerId, reason);
+        if (updatedCount == 0) {
+            log.warn("No offer was marked as declined for offerId: {}", offerId);
+        }
+    }
+
+    @Override
+    public void markAccepted(UUID offerId) {
+        int updatedCount = repo.markAccepted(offerId);
+        if (updatedCount == 0) {
+            log.warn("No offer was marked as accepted for offerId: {}", offerId);
+        }
+    }
+
+    @Override
+    public List<UUID> findOtherPendingOfferIdsForRequest(ServiceRequestId requestId, UUID exceptOfferId) {
+        return repo.findOtherPending(requestId.value(), exceptOfferId);
+    }
+
+    @Override
+    public void bulkMarkRejected(Collection<UUID> offerIds) {
+        if (CollectionUtils.isEmpty(offerIds)) {
+            log.debug("No offer IDs provided for bulk rejection.");
+            return;
+        }
+        int updatedCount = repo.bulkReject(offerIds);
+        log.debug("Bulk rejected {} offers.", updatedCount);
     }
 }

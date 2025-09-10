@@ -143,4 +143,9 @@ public class ServiceRequestHandler implements ServiceRequestUseCase {
         return offerReadPort.findCandidates(requestId);
     }
 
+    @Override
+    public void setChosenOffer(ServiceRequestId serviceRequestId, UUID offerId) {
+        serviceRequestRepository.setChosenOffer(serviceRequestId, offerId);
+    }
+
 }

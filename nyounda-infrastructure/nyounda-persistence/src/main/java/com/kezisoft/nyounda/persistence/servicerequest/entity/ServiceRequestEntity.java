@@ -5,6 +5,7 @@ import com.kezisoft.nyounda.domain.servicerequest.ServiceRequestId;
 import com.kezisoft.nyounda.domain.servicerequest.ServiceRequestStatus;
 import com.kezisoft.nyounda.persistence.categories.entity.CategoryEntity;
 import com.kezisoft.nyounda.persistence.image.entity.ImageEntity;
+import com.kezisoft.nyounda.persistence.offer.entity.OfferEntity;
 import com.kezisoft.nyounda.persistence.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -62,6 +63,10 @@ public class ServiceRequestEntity {
     )
     private List<ImageEntity> images = new ArrayList<>();
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "chosen_offer_id")
+    private OfferEntity chosenOffer;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -69,6 +74,7 @@ public class ServiceRequestEntity {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
 
     public static ServiceRequestEntity fromDomain(ServiceRequest service) {
         return ServiceRequestEntity.builder()

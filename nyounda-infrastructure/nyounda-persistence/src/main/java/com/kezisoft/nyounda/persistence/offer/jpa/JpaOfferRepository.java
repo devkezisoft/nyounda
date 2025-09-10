@@ -5,6 +5,7 @@ import com.kezisoft.nyounda.persistence.offer.entity.OfferEntity;
 import com.kezisoft.nyounda.persistence.servicerequest.entity.ServiceRequestEntity;
 import com.kezisoft.nyounda.persistence.user.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -50,4 +51,26 @@ public interface JpaOfferRepository extends JpaRepository<OfferEntity, UUID> {
             @Param("requestId") UUID requestId,
             @Param("statuses") Collection<OfferStatus> statuses
     );
+
+    @Modifying
+    @Query("update OfferEntity o set o.status=com.kezisoft.nyounda.domain.offer.OfferStatus.REJECTED, o.declineReason=:reason where o.id=:id")
+    int markDeclined(@Param("id") UUID id, @Param("reason") String reason);
+
+    @Modifying
+    @Query("update OfferEntity o set o.status=com.kezisoft.nyounda.domain.offer.OfferStatus.ACCEPTED where o.id=:id")
+    int markAccepted(@Param("id") UUID id);
+
+    @Query("""
+                select o.id from OfferEntity o
+                 where o.request.id=:requestId
+                   and o.id<>:keptId
+                   and o.status=com.kezisoft.nyounda.domain.offer.OfferStatus.PENDING
+            """)
+    List<UUID> findOtherPending(@Param("requestId") UUID requestId, @Param("keptId") UUID keptId);
+
+    @Modifying
+    @Query("update OfferEntity o set o.status=com.kezisoft.nyounda.domain.offer.OfferStatus.REJECTED where o.id in :ids")
+    int bulkReject(@Param("ids") Collection<UUID> ids);
+
+
 }

@@ -179,9 +179,11 @@
             <column name="updated_at" type="timestamptz" defaultValueComputed="now()">
                 <constraints nullable="false"/>
             </column>
+            <column name="chosen_offer_id" type="UUID"/>
         </createTable>
 
     </changeSet>
+
     <changeSet id="10-image" author="nyounda">
         <createTable tableName="image">
             <column name="id" type="uuid">
@@ -268,6 +270,8 @@
             <column name="created_at" type="timestamptz" defaultValueComputed="now()">
                 <constraints nullable="false"/>
             </column>
+
+            <column name="decline_reason" type="TEXT"/>
         </createTable>
 
         <!-- FKs -->
@@ -302,6 +306,20 @@
 
         <createIndex tableName="offer" indexName="idx_offer_created_at">
             <column name="created_at"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="11-sr-chosen-offer-fk" author="nyounda">
+        <addForeignKeyConstraint
+                baseTableName="service_request"
+                baseColumnNames="chosen_offer_id"
+                constraintName="fk_request_chosen_offer"
+                referencedTableName="offer"
+                referencedColumnNames="id"
+                onDelete="SET NULL"/>
+        
+        <createIndex tableName="service_request" indexName="idx_sr_chosen_offer">
+            <column name="chosen_offer_id"/>
         </createIndex>
     </changeSet>
 

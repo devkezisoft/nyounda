@@ -26,4 +26,5 @@ public interface ServiceRequestUseCase {
 
     List<OfferCandidateView> findCandidates(ServiceRequestId requestId);
 
+    void setChosenOffer(ServiceRequestId serviceRequestId, UUID offerId);
 }
