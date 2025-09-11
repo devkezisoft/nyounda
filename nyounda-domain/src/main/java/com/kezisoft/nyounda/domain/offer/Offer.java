@@ -19,4 +19,14 @@ public record Offer(
         OfferStatus status,
         LocalDateTime createdAt
 ) {
+
+    public Money totalAmount() {
+        Money total = amount;
+        if (expenses != null) {
+            for (OfferExpense expense : expenses) {
+                total = total.add(expense.price());
+            }
+        }
+        return total;
+    }
 }

@@ -1,11 +1,13 @@
 package com.kezisoft.nyounda.domain.servicerequest;
 
 import com.kezisoft.nyounda.domain.categories.Category;
+import com.kezisoft.nyounda.domain.offer.Offer;
 import com.kezisoft.nyounda.domain.user.User;
 import lombok.With;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @With
@@ -19,6 +21,7 @@ public record ServiceRequest(
         Category subcategory,
         User user,
         String address,
+        Optional<Offer> chosenOffer,
         LocalDateTime createdAt
 ) {
 

@@ -145,8 +145,15 @@ public class ServiceRequestHandler implements ServiceRequestUseCase {
     }
 
     @Override
-    public void setChosenOffer(ServiceRequestId serviceRequestId, OfferId offerId) {
-        serviceRequestRepository.setChosenOffer(serviceRequestId, offerId);
+    public void choose(ServiceRequestId serviceRequestId, OfferId offerId) {
+        serviceRequestRepository.choose(serviceRequestId, offerId);
+    }
+
+    @Override
+    public boolean hasUserAlreadyRejected(UUID currentUserId, ServiceRequestId id) {
+        return offerReadPort.existsRejectedOfferForRequestAndUser(
+                id.value(), currentUserId
+        );
     }
 
 }

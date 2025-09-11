@@ -64,8 +64,8 @@ public class ServiceRequestRepositoryAdapter implements ServiceRequestRepository
     }
 
     @Override
-    public void setChosenOffer(ServiceRequestId requestId, OfferId offerId) {
-        int updatedCount = repository.setChosenOffer(requestId.value(), offerId.value());
+    public void choose(ServiceRequestId requestId, OfferId offerId) {
+        int updatedCount = repository.choose(requestId.value(), offerId.value());
         if (updatedCount == 0) {
             log.warn("No service request found with id: {}", requestId);
         }

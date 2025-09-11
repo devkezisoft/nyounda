@@ -15,6 +15,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Entity
@@ -112,6 +113,7 @@ public class ServiceRequestEntity {
                 this.subcategory.toDomain(),
                 this.user.toDomain(),
                 this.address,
+                Optional.ofNullable(this.chosenOffer != null ? this.chosenOffer.toDomain(true) : null),
                 this.createdAt != null ? this.createdAt : null
         );
     }

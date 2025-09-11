@@ -59,6 +59,7 @@ public class ServiceRequestResource {
                 .map(req -> ServiceRequestDetailView.from(
                         req,
                         serviceRequestUseCase.hasUserAlreadyApplied(currentUserId, req.id()),
+                        serviceRequestUseCase.hasUserAlreadyRejected(currentUserId, req.id()),
                         serviceRequestUseCase.findCandidates(req.id())
                 ))
                 .orElseThrow(ServiceRequestNotFoundException::new);

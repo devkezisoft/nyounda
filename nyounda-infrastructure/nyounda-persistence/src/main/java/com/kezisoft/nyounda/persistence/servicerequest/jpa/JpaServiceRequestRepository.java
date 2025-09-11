@@ -19,6 +19,6 @@ public interface JpaServiceRequestRepository extends JpaRepository<ServiceReques
     Optional<ServiceRequestEntity> findById(UUID id);
 
     @Modifying
-    @Query("update ServiceRequestEntity sr set sr.chosenOffer.id = :offerId where sr.id = :value")
-    int setChosenOffer(UUID value, UUID offerId);
+    @Query("update ServiceRequestEntity sr set sr.chosenOffer.id = :offerId, sr.status = com.kezisoft.nyounda.domain.servicerequest.ServiceRequestStatus.ASSIGNED where sr.id = :value")
+    int choose(UUID value, UUID offerId);
 }

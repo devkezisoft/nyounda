@@ -53,7 +53,7 @@ public class OfferResource {
     // Client declines an offer
     @PreAuthorize("hasRole('CLIENT')")
     @PatchMapping("/{offerId}/decline")
-    public ResponseEntity<Void> decline(@PathVariable UUID offerId, @RequestBody OfferDeclineRequest body) {
+    public ResponseEntity<Void> decline(@PathVariable UUID requestId, @PathVariable UUID offerId, @RequestBody OfferDeclineRequest body) {
         UUID currentUserId = SecurityUtils.getCurrentUserLogin()
                 .map(UUID::fromString)
                 .orElseThrow(ProviderNotFoundException::new);

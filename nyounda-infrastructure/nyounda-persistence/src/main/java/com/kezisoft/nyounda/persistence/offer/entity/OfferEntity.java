@@ -70,10 +70,10 @@ public class OfferEntity {
         return new Money(total, amount.currency());
     }
 
-    public Offer toDomain() {
+    public Offer toDomain(boolean stopCyclic) {
         return new Offer(
                 OfferId.of(this.id),
-                request.toDomain(),
+                stopCyclic ? null : request.toDomain(),
                 user.toDomain(),
                 this.mode,
                 this.amount,

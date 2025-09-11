@@ -48,7 +48,7 @@ public class OfferReadAdapter implements OfferReadPort {
     public List<OfferCandidateView> findCandidates(ServiceRequestId requestId) {
         List<Object[]> rows = repo.findRowsForRequest(
                 requestId.value(),
-                EnumSet.of(OfferStatus.PENDING)
+                EnumSet.of(OfferStatus.PENDING, OfferStatus.ACCEPTED)
         );
 
         return rows.stream()
@@ -76,5 +76,17 @@ public class OfferReadAdapter implements OfferReadPort {
                             o.getCreatedAt()
                     );
                 }).toList();
+    }
+
+    @Override
+    public boolean existsRejectedOfferForRequestAndUser(UUID value, UUID currentUserId) {
+        ServiceRequestEntity req = jpaRequestRepo.findById(value)
+                .orElseThrow(() -> new ServiceRequestNotFoundException(value));
+
+        UserEntity user = jpaUserRepo.findById(currentUserId)
+                .orElseThrow(AccountNotFoundException::new);
+        return repo.existsByRequestAndUserAndStatusIn(req, user, EnumSet.of(
+                OfferStatus.REJECTED
+        ));
     }
 }

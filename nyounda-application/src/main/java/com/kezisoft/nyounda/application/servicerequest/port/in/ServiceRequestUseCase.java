@@ -27,5 +27,7 @@ public interface ServiceRequestUseCase {
 
     List<OfferCandidateView> findCandidates(ServiceRequestId requestId);
 
-    void setChosenOffer(ServiceRequestId serviceRequestId, OfferId offerId);
+    boolean hasUserAlreadyRejected(UUID currentUserId, ServiceRequestId id);
+
+    void choose(ServiceRequestId requestId, OfferId offerId);
 }

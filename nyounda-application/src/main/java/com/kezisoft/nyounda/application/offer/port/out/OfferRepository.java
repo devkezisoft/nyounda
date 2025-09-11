@@ -3,6 +3,7 @@ package com.kezisoft.nyounda.application.offer.port.out;
 
 import com.kezisoft.nyounda.domain.offer.Offer;
 import com.kezisoft.nyounda.domain.offer.OfferId;
+import com.kezisoft.nyounda.domain.offer.OfferStatus;
 import com.kezisoft.nyounda.domain.servicerequest.ServiceRequestId;
 
 import java.util.*;
@@ -13,7 +14,7 @@ public interface OfferRepository {
     Optional<Offer> findById(OfferId id);
 
     // optional: to prevent duplicates (one active offer per provider/request)
-    boolean existsActiveByRequestAndProvider(ServiceRequestId requestId, UUID userId);
+    boolean existsActiveByRequestAndProvider(ServiceRequestId requestId, UUID userId, EnumSet<OfferStatus> statuses);
 
     Set<UUID> findRequestIdsAppliedByUser(UUID userId, Collection<UUID> reqIds);
 

@@ -9,6 +9,7 @@ import com.kezisoft.nyounda.domain.servicerequest.ServiceRequestStatus;
 import com.kezisoft.nyounda.domain.user.User;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public record ServiceRequestCreateCommand(
@@ -35,6 +36,7 @@ public record ServiceRequestCreateCommand(
                 subCategory,
                 user,
                 command.addressText,
+                Optional.empty(),
                 null
         );
 

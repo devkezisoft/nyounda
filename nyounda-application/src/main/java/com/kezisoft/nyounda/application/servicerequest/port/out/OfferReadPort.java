@@ -20,4 +20,6 @@ public interface OfferReadPort {
     );
 
     List<OfferCandidateView> findCandidates(ServiceRequestId requestId);
+
+    boolean existsRejectedOfferForRequestAndUser(UUID value, UUID currentUserId);
 }

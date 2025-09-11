@@ -41,17 +41,17 @@ public class OfferRepositoryAdapter implements OfferRepository {
                 .orElseThrow(AccountNotFoundException::new);
 
         OfferEntity entity = OfferEntity.fromDomain(offer, req, user);
-        return repo.save(entity).toDomain();
+        return repo.save(entity).toDomain(false);
     }
 
     @Override
     public Optional<Offer> findById(OfferId id) {
         log.debug("Finding offer by id: {}", id);
-        return repo.findById(id.value()).map(OfferEntity::toDomain);
+        return repo.findById(id.value()).map(offerEntity -> offerEntity.toDomain(false));
     }
 
     @Override
-    public boolean existsActiveByRequestAndProvider(ServiceRequestId requestId, UUID userId) {
+    public boolean existsActiveByRequestAndProvider(ServiceRequestId requestId, UUID userId, EnumSet<OfferStatus> statuses) {
         log.debug("Checking existence of active offer for requestId: {} and userId: {}", requestId, userId);
         ServiceRequestEntity req = jpaRequestRepo.findById(requestId.value())
                 .orElseThrow(() -> new ServiceRequestNotFoundException(requestId.value()));
@@ -60,7 +60,7 @@ public class OfferRepositoryAdapter implements OfferRepository {
                 .orElseThrow(AccountNotFoundException::new);
 
         return repo.existsByRequestAndUserAndStatusIn(
-                req, user, EnumSet.of(OfferStatus.PENDING, OfferStatus.ACCEPTED)
+                req, user, statuses
         );
     }
 

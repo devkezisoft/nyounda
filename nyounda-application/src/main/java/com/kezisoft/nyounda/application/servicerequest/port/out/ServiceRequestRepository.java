@@ -22,5 +22,5 @@ public interface ServiceRequestRepository {
 
     Page<ServiceRequest> search(ServiceRequestSearchQuery fixed);
 
-    void setChosenOffer(ServiceRequestId requestId, OfferId offerId);
+    void choose(ServiceRequestId requestId, OfferId offerId);
 }

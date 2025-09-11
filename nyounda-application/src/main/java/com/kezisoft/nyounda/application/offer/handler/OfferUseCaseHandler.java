@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.EnumSet;
 import java.util.UUID;
 
 @Service
@@ -40,11 +41,16 @@ public class OfferUseCaseHandler implements OfferUseCase {
         }
 
         // 3) prevent duplicates
-        if (offerRepository.existsActiveByRequestAndProvider(cmd.requestId(), cmd.userId())) {
+        if (offerRepository.existsActiveByRequestAndProvider(cmd.requestId(), cmd.userId(), EnumSet.of(OfferStatus.PENDING, OfferStatus.ACCEPTED))) {
             throw new IllegalStateException("You already have a pending offer for this job.");
         }
 
-        // 4) build and persist
+        // 4)if already rejected, can’t re-offer
+        if (offerRepository.existsActiveByRequestAndProvider(cmd.requestId(), cmd.userId(), EnumSet.of(OfferStatus.REJECTED))) {
+            throw new IllegalStateException("You cannot re-offer on a request that has already rejected your previous offer.");
+        }
+
+        // 5) build and persist
         Offer offer = cmd.toDomain(req, user, OfferStatus.PENDING);
 
         return offerRepository.save(offer);
@@ -76,7 +82,7 @@ public class OfferUseCaseHandler implements OfferUseCase {
         // accept selected
         offerRepository.markAccepted(offerId);
         // pin on request
-        serviceRequestUseCase.setChosenOffer(requestId, offerId);
+        serviceRequestUseCase.choose(requestId, offerId);
         // (optional) auto reject others
         var others = offerRepository.findOtherPendingOfferIdsForRequest(requestId, offerId);
 
