@@ -20,7 +20,8 @@ public record ServiceRequestView(
         CategoryView subcategory,
         String address,
         LocalDateTime createdAt,
-        UserView user
+        UserView user,
+        ServiceRequestDetailView.AssignedProviderView assignedTo
 ) {
     public static ServiceRequestView from(ServiceRequest serviceRequest) {
         return new ServiceRequestView(
@@ -35,7 +36,8 @@ public record ServiceRequestView(
                 CategoryView.fromDomain(serviceRequest.subcategory()),
                 serviceRequest.address(),
                 serviceRequest.createdAt(),
-                UserView.fromDomain(serviceRequest.user())
+                UserView.fromDomain(serviceRequest.user()),
+                serviceRequest.chosenOffer().map(offer -> ServiceRequestDetailView.AssignedProviderView.from(offer, serviceRequest.address())).orElse(null)
         );
     }
 }

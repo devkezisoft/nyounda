@@ -7,4 +7,5 @@
         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.22.xsd">
 
     <include file="db/changelog/001-init-schema.xml"/>
+    <include file="db/changelog/002-init-test-sample-data.xml" context="local,test"/>
 </databaseChangeLog>

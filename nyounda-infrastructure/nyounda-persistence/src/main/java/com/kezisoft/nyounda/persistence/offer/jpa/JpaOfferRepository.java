@@ -57,7 +57,7 @@ public interface JpaOfferRepository extends JpaRepository<OfferEntity, UUID> {
     int markDeclined(@Param("id") UUID id, @Param("reason") String reason);
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
-    @Query("update OfferEntity o set o.status=com.kezisoft.nyounda.domain.offer.OfferStatus.ACCEPTED where o.id=:id")
+    @Query("update OfferEntity o set o.status=com.kezisoft.nyounda.domain.offer.OfferStatus.ACCEPTED, o.assignedAt=CURRENT_TIMESTAMP where o.id=:id")
     int markAccepted(@Param("id") UUID id);
 
     @Query("""

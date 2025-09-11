@@ -25,10 +25,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -228,6 +231,8 @@ public class OfferResourceIT extends AbstractIntegrationTest {
         // Chosen is ACCEPTED
         var chosen = jpaOfferRepo.findById(offer2.id()).orElseThrow();
         assertThat(chosen.getStatus()).isEqualTo(OfferStatus.ACCEPTED);
+        assertThat(chosen.getAssignedAt()).isCloseTo(LocalDateTime.now(), within(5, ChronoUnit.MINUTES));
+        assertThat(chosen.getCreatedAt()).isCloseTo(LocalDateTime.now(), within(5, ChronoUnit.MINUTES));
 
         // Optional rule: non-chosen ones become DECLINED (depends on your use case handler)
         var other = jpaOfferRepo.findById(offer1.id()).orElseThrow();

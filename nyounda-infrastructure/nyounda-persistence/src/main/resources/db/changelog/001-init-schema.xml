@@ -131,7 +131,7 @@
                              constraintName="uk_pskill_provider_category"/>
     </changeSet>
 
-    <changeSet id="008-seed-categories" author="nyounda" context="seed">
+    <changeSet id="008-seed-categories" author="nyounda">
         <loadData tableName="category" separator="," file="db/data/categories.csv" encoding="UTF-8">
             <column name="id" type="uuid"/>
             <column name="name" type="string"/>
@@ -271,6 +271,8 @@
                 <constraints nullable="false"/>
             </column>
 
+            <column name="assigned_at" type="timestamptz"/>
+
             <column name="decline_reason" type="TEXT"/>
         </createTable>
 
@@ -317,7 +319,7 @@
                 referencedTableName="offer"
                 referencedColumnNames="id"
                 onDelete="SET NULL"/>
-        
+
         <createIndex tableName="service_request" indexName="idx_sr_chosen_offer">
             <column name="chosen_offer_id"/>
         </createIndex>

@@ -13,6 +13,7 @@ import org.hibernate.annotations.Type;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Entity
@@ -60,6 +61,10 @@ public class OfferEntity {
     @Column(name = "decline_reason", columnDefinition = "text")
     private String declineReason;
 
+    // Timestamp when the offer was accepted and assigned to the request
+    @Column(name = "assigned_at")
+    private LocalDateTime assignedAt;
+
     public Money getTotalAmount() {
         BigDecimal total = amount.amount();
         if (expenses != null) {
@@ -80,7 +85,8 @@ public class OfferEntity {
                 this.expenses,
                 this.message,
                 this.status,
-                this.createdAt
+                this.createdAt,
+                this.status == OfferStatus.ACCEPTED ? Optional.of(this.assignedAt) : Optional.empty()
         );
     }
 

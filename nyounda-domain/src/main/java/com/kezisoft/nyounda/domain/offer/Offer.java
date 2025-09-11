@@ -7,6 +7,7 @@ import com.kezisoft.nyounda.domain.user.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public record Offer(
         OfferId id,
@@ -17,7 +18,8 @@ public record Offer(
         List<OfferExpense> expenses,
         String message,
         OfferStatus status,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        Optional<LocalDateTime> assignedAt // time when this offer was chosen
 ) {
 
     public Money totalAmount() {

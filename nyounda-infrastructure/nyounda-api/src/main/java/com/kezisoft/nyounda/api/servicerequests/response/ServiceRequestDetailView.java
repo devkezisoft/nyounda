@@ -77,11 +77,12 @@ public record ServiceRequestDetailView(
     public record OfferSummary(OfferMode mode, Money amount, List<OfferExpense> expenses) {
     }
 
-    public record AssignedProviderView(UUID id, String fullName, String avatarUrl, String phone, String city) {
+    public record AssignedProviderView(UUID id, String fullName, String avatarUrl, String phone, String city,
+                                       LocalDateTime assignedAt) {
         public static AssignedProviderView from(Offer chosen, String address) {
             var u = chosen.user();
             // You can enrich this with provider profile if available
-            return new AssignedProviderView(u.id(), u.fullName(), u.avatarUrl(), u.phone(), address);
+            return new AssignedProviderView(u.id(), u.fullName(), u.avatarUrl(), u.phone(), address, chosen.assignedAt().orElse(null));
         }
     }
 }

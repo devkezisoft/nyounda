@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.22.xsd">
+
+    <!-- ==========================================================
+        SEED: users (providers & clients), providers, skills (CSV)
+        and programmatic generation of requests + offers (SQL)
+        Contexts: local,test
+        ========================================================== -->
+
+    <changeSet id="20-seed-users-providers" author="nyounda" context="local,test">
+        <loadData tableName="app_user" separator="," file="db/data/users_providers.csv" encoding="UTF-8">
+            <column name="id" type="uuid"/>
+            <column name="full_name" type="string"/>
+            <column name="email" type="string"/>
+            <column name="phone" type="string"/>
+            <!-- Postgres text[] accepts {PROVIDER} -->
+            <column name="roles" type="string"/>
+        </loadData>
+    </changeSet>
+
+    <changeSet id="21-seed-users-clients" author="nyounda" context="local,test">
+        <loadData tableName="app_user" separator="," file="db/data/users_clients.csv" encoding="UTF-8">
+            <column name="id" type="uuid"/>
+            <column name="full_name" type="string"/>
+            <column name="email" type="string"/>
+            <column name="phone" type="string"/>
+            <column name="roles" type="string"/>
+        </loadData>
+    </changeSet>
+
+    <changeSet id="22-seed-providers" author="nyounda" context="local,test">
+        <loadData tableName="provider" separator="," file="db/data/providers.csv" encoding="UTF-8">
+            <column name="id" type="uuid"/>
+            <column name="user_id" type="uuid"/>
+            <column name="full_name" type="string"/>
+            <column name="avatar_url" type="string"/>
+            <column name="average_rating" type="numeric"/>
+            <column name="number_of_reviews" type="numeric"/>
+            <column name="location" type="string"/>
+            <column name="years_experience" type="numeric"/>
+            <column name="jobs_done" type="numeric"/>
+            <column name="response_time" type="string"/>
+        </loadData>
+    </changeSet>
+
+    <changeSet id="23-seed-provider-skills" author="nyounda" context="local,test">
+        <loadData tableName="provider_skill" separator="," file="db/data/provider_skills.csv" encoding="UTF-8">
+            <column name="id" type="uuid"/>
+            <column name="provider_id" type="uuid"/>
+            <column name="category_id" type="uuid"/>
+            <column name="description" type="string"/>
+            <column name="experience_years" type="numeric"/>
+        </loadData>
+    </changeSet>
+
+    <!-- Generate 250 requests (10 per client) across 5 root categories
+         and add PENDING offers from providers matching their skills -->
+    <changeSet id="24-generate-requests-and-offers" author="nyounda" context="local,test">
+        <sqlFile
+                path="../sql/seed_generate_requests_offers.sql"
+                relativeToChangelogFile="true"
+                splitStatements="false"
+                endDelimiter=";"
+                stripComments="false"/>
+    </changeSet>
+</databaseChangeLog>

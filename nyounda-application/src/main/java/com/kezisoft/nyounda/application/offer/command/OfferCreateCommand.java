@@ -9,6 +9,7 @@ import com.kezisoft.nyounda.domain.user.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public record OfferCreateCommand(
@@ -29,7 +30,8 @@ public record OfferCreateCommand(
                 expenses,
                 message,
                 status,
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                Optional.empty()
         );
     }
 }
