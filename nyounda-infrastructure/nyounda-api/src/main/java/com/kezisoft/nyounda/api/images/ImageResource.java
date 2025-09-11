@@ -5,6 +5,7 @@ import com.kezisoft.nyounda.api.images.response.ImageView;
 import com.kezisoft.nyounda.application.images.command.ImageCreateCommand;
 import com.kezisoft.nyounda.application.images.port.in.ImageUseCase;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,7 +22,10 @@ public class ImageResource {
     private final ImageUseCase imageUseCase;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public List<ImageView> upload(@RequestPart("files") List<MultipartFile> files) throws Exception {
+    public List<ImageView> upload(@RequestPart(value = "files", required = false) List<MultipartFile> files) throws Exception {
+        if (CollectionUtils.isEmpty(files)) {
+            return List.of();
+        }
         var fileCreateCommands = files.stream().map(
                 file -> {
                     try {
